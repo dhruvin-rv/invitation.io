@@ -1,0 +1,35 @@
+.about_us_img{
+    background-color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 30px;
+}
+
+.about_us_img Image{
+    height: 500px
+}
+.about_us_content{
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+.about_us_content h1{
+    font-family: Inter;
+    color: #486BBC;
+    font-weight: 600;
+    font-size: 40px;
+    margin-bottom: 5px;
+}
+.about_us_content h2{
+    font-family: Inter;
+    color: #C5C5C5;
+    font-weight: 300;
+    font-size: 20px;
+}
+
+.about_us_content p{
+    text-align: center;
+    padding: 0 150px;
+}

@@ -1,0 +1,30 @@
+.hiw_main{
+    width: 30%;
+    min-width: 450px;
+    margin: -50px auto 50px;
+}
+.hiw_main h1{
+    color: #486BBC;
+    font-family: Roboto;
+    letter-spacing: 0.5rem;
+    text-align: center;
+}
+
+.hiw_main p{
+    color: #606060;
+    text-align: center;
+}
+
+.hiw_guide{
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    align-items: center;
+}
+
+.hiw_step{
+    padding:0 150px;
+}
+
+.hiw_step p{
+    color: #9E9E9E;
+}

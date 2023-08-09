@@ -16,7 +16,9 @@
     "eslint-config-next": "13.4.12",
     "next": "13.4.12",
     "react": "18.2.0",
+    "react-countup": "^6.4.2",
     "react-dom": "18.2.0",
+    "react-drag-drop-files": "^2.3.10",
     "typescript": "5.1.6"
   }
 }

@@ -1,0 +1,86 @@
+    .uploadProvider {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        border-radius: 52px;
+        border: 3px dashed #486BBC;
+        height: 400px;
+        margin: 20px 150px;
+        position: relative;
+    }
+
+    .uploadProvider::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        border-radius: 52px;
+        background-color: rgba(0, 0, 0, 0.6);
+        /* Dark overlay with 60% opacity */
+        z-index: 1;
+        /* Make sure the overlay is on top of the content */
+        pointer-events: none;
+        /* Allow the overlay to ignore mouse events */
+        display: none;
+        /* Initially, the overlay is hidden */
+    }
+
+    .uploadProvider.dragover::after {
+        display: block;
+        /* Show the overlay when the dragover class is applied */
+    }
+
+    .uploadProvider h2 {
+        text-align: center;
+        font-weight: 400;
+        color: #393939;
+    }
+
+    .uploadProvider p {
+        text-align: center;
+        margin-bottom: 50px;
+        color: #393939;
+    }
+
+    .uploadButton {
+        width: 40%;
+        min-height: 50px;
+        height: auto;
+        border-radius: 65px;
+        background: #486BBC;
+        border: 0;
+        color: #FFF;
+        text-transform: capitalize;
+        font-size: 15px;
+        flex-grow: 1;
+
+    }
+
+    .continueButton {
+        max-width: 50px;
+        min-width: 50px;
+        max-height: 50px;
+        min-height: 50px;
+        border-radius: 50%;
+        background: #486BBC;
+        border: 0;
+        color: #FFF;
+        text-align: center;
+        vertical-align: middle;
+        font-size: 30px;
+    }
+
+    .buttonDiv {
+        width: 30%;
+        display: flex;
+        align-items: center;
+        gap: 10px
+    }
+
+    .uploadProvider button:hover {
+        background: #6687D4;
+        cursor: pointer;
+    }
