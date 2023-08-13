@@ -3,10 +3,12 @@ import styles from "./fileUploader.module.css";
 
 interface FilesDragAndDropProps {
   onUpload: (file: any) => void;
+  onContinue: () => void;
   children: ReactNode;
 }
 const FileUpload: React.FC<FilesDragAndDropProps & { buttonText: string }> = ({
   onUpload,
+  onContinue,
   children,
   buttonText,
 }) => {
@@ -74,6 +76,7 @@ const FileUpload: React.FC<FilesDragAndDropProps & { buttonText: string }> = ({
       onUpload(files);
     }
   };
+
   return (
     <>
       <div
@@ -96,7 +99,9 @@ const FileUpload: React.FC<FilesDragAndDropProps & { buttonText: string }> = ({
             {buttonText}
           </button>
           {fileSelected.length > 0 && (
-            <button className={styles.continueButton}>→</button>
+            <button className={styles.continueButton} onClick={onContinue}>
+              →
+            </button>
           )}
         </div>
         {fileSelected.length ? (

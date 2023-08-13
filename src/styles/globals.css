@@ -1,18 +1,20 @@
-body{
+body {
   margin: 0;
 }
 
-a, p{
+a,
+p {
   font-family: Inter;
   text-decoration: none;
 }
 
-h1,h2{
+h1,
+h2 {
   margin: 0;
   font-family: Roboto;
 }
 
-.container_main{
+.container_main {
   max-width: 80%;
   margin: auto;
 }

@@ -1,0 +1,19 @@
+.view_main {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+    gap: 10px;
+    background-color: aliceblue;
+}
+
+.buttons {
+    border-radius: 50%;
+    height: 50px;
+    width: 50px;
+    text-align: center;
+    background-color: #486BBC;
+    color: white;
+    border: none;
+    font-size: 20px;
+}

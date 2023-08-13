@@ -1,0 +1,110 @@
+.toolsBar {
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    max-height: 20px;
+    background-color: #FFFFFF;
+    min-height: 50px;
+    margin: 0 20%;
+    border: 2px;
+}
+
+.fontSizeProvider {
+    display: flex;
+    align-items: center;
+    gap: 10px
+}
+
+.fontSizeProvider button {
+    width: 45px;
+    height: 33px;
+    flex-shrink: 0;
+    border-radius: 3px;
+    border: 1px solid #E7E7E7;
+    background: #FFF;
+    font-size: 20px;
+    color: #4D4E50;
+    cursor: pointer;
+
+}
+
+.fontSizeProvider button:hover {
+    background: #E7E7E7;
+
+}
+
+.fontSizeProvider input {
+    min-width: 40px;
+    max-width: 100px;
+    border: 1px solid #E7E7E7;
+    background: #FFF;
+    font-size: 20px;
+    color: #4D4E50;
+}
+
+.dragSelection {
+    border-radius: 3px;
+    border: 1px solid #E7E7E7;
+    background: #FFF;
+    min-width: 152px;
+    min-height: 33px;
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
+.dragSelection:hover {
+    background: #E7E7E7;
+
+}
+
+.fontSelection {
+    width: 200px;
+    height: 33px;
+    flex-shrink: 0;
+    border-radius: 3px;
+    border: 1px solid #E7E7E7;
+    cursor: pointer;
+    background: #FFF;
+
+}
+
+.fontSelection:hover {
+    background: #E7E7E7;
+
+}
+
+.colorPicker {
+    height: 33px;
+    width: 33px;
+    overflow: hidden;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    cursor: pointer;
+    position: relative;
+}
+
+.colorPicker input {
+    position: absolute;
+    height: 50px;
+    width: 50px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    overflow: hidden;
+    border: none;
+    margin: 0;
+    cursor: pointer;
+    padding: 0;
+}
+
+.pdf_provider_main {
+    background-color: #EFF4FF;
+}
+
+.pdf_page {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #EFF4FF !important;
+}

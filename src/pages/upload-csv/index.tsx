@@ -1,15 +1,23 @@
 import FileUpload from "@/components/fileUploader/fileUploader.component";
+import { useUploadContext } from "@/context/files.context";
+import { useRouter } from "next/router";
 import React from "react";
 
 const UploadCsv = () => {
+  const router = useRouter();
+  const { setCsvFile } = useUploadContext();
   const onUpload = (files: FileList) => {
-    console.log("Uploaded CSV File", files);
+    setCsvFile(files[0]);
+  };
+  const redirect = () => {
+    router.push("/edit-pdf");
   };
   return (
     <>
       <FileUpload
         onUpload={onUpload}
         buttonText="browse for a CSV on your computer"
+        onContinue={redirect}
       >
         <h2>Drag and Drop CSV Here to Get Started!</h2>
         <p>
