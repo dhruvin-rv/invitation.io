@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import { pdfjs } from "react-pdf";
 import { RenderTask } from "pdfjs-dist";
 import styles from "./pdfViewer.module.css";
@@ -10,7 +10,11 @@ import {
 pdfjs.GlobalWorkerOptions.workerSrc =
   "//cdnjs.cloudflare.com/ajax/libs/pdf.js/3.6.172/pdf.worker.js";
 
-const PDFProvider = () => {
+type PDFProviderProps = {
+  onAreaSelected: (startX: number, startY: number) => void;
+};
+
+const PDFProvider = ({ onAreaSelected }: PDFProviderProps) => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const [currentPage, setCurrentPage] = React.useState<number>(1);
   const [totalPages, setTotalPages] = React.useState<number | null>(null);
@@ -26,6 +30,45 @@ const PDFProvider = () => {
     if (currentPage < totalPages!) {
       setCurrentPage(currentPage + 1);
     }
+  };
+
+  const handleAreaSelection = (x: number, y: number) => {
+    // Do something with the x and y positions of the selected area
+    console.log("Selected area position: ", x, y);
+  };
+
+  const [selectionStart, setSelectionStart] = useState<{
+    x: number;
+    y: number;
+  } | null>(null);
+
+  const [selectionEnd, setSelectionEnd] = useState<{
+    x: number;
+    y: number;
+  } | null>(null);
+
+  const handleCanvasMouseDown = (
+    event: React.MouseEvent<HTMLCanvasElement>
+  ) => {};
+
+  const handleCanvasMouseUp = (event: React.MouseEvent<HTMLCanvasElement>) => {
+    const x = event.nativeEvent.offsetX;
+    const y = event.nativeEvent.offsetY;
+    setSelectionEnd({ x, y });
+
+    // Calculate and pass selected area position to the callback
+    if (selectionStart && selectionEnd) {
+      const selectedAreaX = Math.min(selectionStart.x, selectionEnd.x);
+      const selectedAreaY = Math.min(selectionStart.y, selectionEnd.y);
+      handleAreaSelection(selectedAreaX, selectedAreaY);
+
+      // Call the area selection function from prop
+      onAreaSelected(selectedAreaX, selectedAreaY);
+    }
+
+    // Clear the selection
+    setSelectionStart(null);
+    setSelectionEnd(null);
   };
 
   useEffect(() => {
@@ -56,6 +99,10 @@ const PDFProvider = () => {
           renderingTaskRef.current = page.render(renderContext);
           try {
             await renderingTaskRef.current.promise;
+            canvasRef.current?.addEventListener(
+              "mousedown",
+              handleCanvasMouseDown as any
+            );
           } catch (error) {
             // Handle cancellation or other errors
             console.error("Rendering task error:", error);
@@ -79,8 +126,19 @@ const PDFProvider = () => {
 
   return (
     <div className={styles.view_main}>
+      {selectionStart && selectionEnd && (
+        <div
+          className={styles["selected-area"]}
+          style={{
+            top: `${Math.min(selectionStart.y, selectionEnd.y)}px`,
+            left: `${Math.min(selectionStart.x, selectionEnd.x)}px`,
+            width: `${Math.abs(selectionStart.x - selectionEnd.x)}px`,
+            height: `${Math.abs(selectionStart.y - selectionEnd.y)}px`,
+          }}
+        />
+      )}
       <canvas ref={canvasRef}></canvas>
-      <div>
+      <div className={styles.page_selector}>
         <button
           className={styles.buttons}
           onClick={handlePrevious}
@@ -88,11 +146,13 @@ const PDFProvider = () => {
         >
           <FontAwesomeIcon icon={faChevronLeft} />
         </button>
-        {currentPage}
+        <div>
+          {currentPage} / {totalPages}
+        </div>
         <button
           className={styles.buttons}
-          onClick={handleNext}
           disabled={currentPage === totalPages}
+          onClick={handleNext}
         >
           <FontAwesomeIcon icon={faChevronRight} />
         </button>
