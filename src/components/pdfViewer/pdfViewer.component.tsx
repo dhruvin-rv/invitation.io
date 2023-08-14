@@ -18,6 +18,20 @@ const PDFProvider = ({ onAreaSelected }: PDFProviderProps) => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const [currentPage, setCurrentPage] = React.useState<number>(1);
   const [totalPages, setTotalPages] = React.useState<number | null>(null);
+  const [isDown, setIsDown] = React.useState<boolean>(false);
+  const [canvasContext, setCanvasContext] = React.useState<
+    CanvasRenderingContext2D | null | undefined
+  >(null);
+  const [startX, setStartX] = React.useState<number>(0);
+  const [startY, setStartY] = React.useState<number>(0);
+  const [preveStartX, setPreveStartX] = React.useState(0);
+  const [preveStartY, setPreveStartY] = React.useState(0);
+  const [preveWidth, setPreveWidth] = React.useState(0);
+  const [preveHeight, setPreveHeight] = React.useState(0);
+  const [mouseX, setMouseX] = React.useState(0);
+  const [mouseY, setMouseY] = React.useState(0);
+  const [offsetX, setOffsetX] = React.useState(0);
+  const [offsetY, setOffsetY] = React.useState(0);
   const renderingTaskRef = useRef<RenderTask | any>(null);
 
   const handlePrevious = (): void => {
@@ -32,43 +46,52 @@ const PDFProvider = ({ onAreaSelected }: PDFProviderProps) => {
     }
   };
 
-  const handleAreaSelection = (x: number, y: number) => {
-    // Do something with the x and y positions of the selected area
-    console.log("Selected area position: ", x, y);
+  const handleMouseDown = (event: MouseEvent) => {
+    event.preventDefault();
+    event.stopPropagation();
+    const rect = canvasRef.current?.getBoundingClientRect();
+    if (rect) {
+      setStartX(event.clientX - rect?.left);
+      setStartY(event.clientY - rect?.top);
+    }
+    setIsDown(true);
   };
 
-  const [selectionStart, setSelectionStart] = useState<{
-    x: number;
-    y: number;
-  } | null>(null);
+  const handleMouseUp = (event: MouseEvent) => {
+    event.stopPropagation();
+    event.preventDefault();
+    setIsDown(false);
+    canvasContext?.strokeRect(
+      preveStartX,
+      preveStartY,
+      preveWidth,
+      preveHeight
+    );
+  };
 
-  const [selectionEnd, setSelectionEnd] = useState<{
-    x: number;
-    y: number;
-  } | null>(null);
+  const handleMouseOut = (event: MouseEvent) => {
+    event.stopPropagation();
+    event.preventDefault();
+    setIsDown(false);
+  };
 
-  const handleCanvasMouseDown = (
-    event: React.MouseEvent<HTMLCanvasElement>
-  ) => {};
-
-  const handleCanvasMouseUp = (event: React.MouseEvent<HTMLCanvasElement>) => {
-    const x = event.nativeEvent.offsetX;
-    const y = event.nativeEvent.offsetY;
-    setSelectionEnd({ x, y });
-
-    // Calculate and pass selected area position to the callback
-    if (selectionStart && selectionEnd) {
-      const selectedAreaX = Math.min(selectionStart.x, selectionEnd.x);
-      const selectedAreaY = Math.min(selectionStart.y, selectionEnd.y);
-      handleAreaSelection(selectedAreaX, selectedAreaY);
-
-      // Call the area selection function from prop
-      onAreaSelected(selectedAreaX, selectedAreaY);
-    }
-
-    // Clear the selection
-    setSelectionStart(null);
-    setSelectionEnd(null);
+  const handleMouseMove = (event: MouseEvent) => {
+    event.preventDefault();
+    event.stopPropagation();
+    if (!isDown) return;
+    setMouseX(event.clientX - offsetX);
+    setMouseY(event.clientY - offsetY);
+    const width = mouseX - startX;
+    const height = mouseY - startY;
+    canvasContext?.clearRect(
+      0,
+      0,
+      canvasRef.current?.width || 0,
+      canvasRef.current?.height || 0
+    );
+    canvasContext?.strokeRect(startX, startY, width, height);
+    setPreveStartX(startX);
+    setPreveHeight(startY);
   };
 
   useEffect(() => {
@@ -99,10 +122,31 @@ const PDFProvider = ({ onAreaSelected }: PDFProviderProps) => {
           renderingTaskRef.current = page.render(renderContext);
           try {
             await renderingTaskRef.current.promise;
-            canvasRef.current?.addEventListener(
-              "mousedown",
-              handleCanvasMouseDown as any
-            );
+            if (canvasRef.current) {
+              setCanvasContext(canvasRef.current?.getContext("2d"));
+              canvasRef.current.addEventListener(
+                "mousedown",
+                handleMouseDown as any
+              );
+              canvasRef.current.addEventListener(
+                "mouseout",
+                handleMouseOut as any
+              );
+              canvasRef.current.addEventListener(
+                "mouseup",
+                handleMouseUp as any
+              );
+              canvasRef.current.addEventListener(
+                "mousemove",
+                handleMouseMove as any
+              );
+              if (canvasContext) {
+                canvasContext.strokeStyle = "blue";
+                canvasContext.lineWidth = 3;
+              }
+              setOffsetX(canvasRef.current.offsetLeft || 0);
+              setOffsetX(canvasRef.current.offsetTop || 0);
+            }
           } catch (error) {
             // Handle cancellation or other errors
             console.error("Rendering task error:", error);
@@ -126,17 +170,6 @@ const PDFProvider = ({ onAreaSelected }: PDFProviderProps) => {
 
   return (
     <div className={styles.view_main}>
-      {selectionStart && selectionEnd && (
-        <div
-          className={styles["selected-area"]}
-          style={{
-            top: `${Math.min(selectionStart.y, selectionEnd.y)}px`,
-            left: `${Math.min(selectionStart.x, selectionEnd.x)}px`,
-            width: `${Math.abs(selectionStart.x - selectionEnd.x)}px`,
-            height: `${Math.abs(selectionStart.y - selectionEnd.y)}px`,
-          }}
-        />
-      )}
       <canvas ref={canvasRef}></canvas>
       <div className={styles.page_selector}>
         <button
