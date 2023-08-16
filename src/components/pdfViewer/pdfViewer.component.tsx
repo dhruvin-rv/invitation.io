@@ -16,24 +16,12 @@ type PDFProviderProps = {
 
 const PDFProvider = ({ onAreaSelected }: PDFProviderProps) => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const canvasContext = useRef<CanvasRenderingContext2D | null>(null);
   const [currentPage, setCurrentPage] = React.useState<number>(1);
   const [totalPages, setTotalPages] = React.useState<number | null>(null);
-  const [isDown, setIsDown] = React.useState<boolean>(false);
-  const [canvasContext, setCanvasContext] = React.useState<
-    CanvasRenderingContext2D | null | undefined
-  >(null);
-  const [startX, setStartX] = React.useState<number>(0);
-  const [startY, setStartY] = React.useState<number>(0);
-  const [preveStartX, setPreveStartX] = React.useState(0);
-  const [preveStartY, setPreveStartY] = React.useState(0);
-  const [preveWidth, setPreveWidth] = React.useState(0);
-  const [preveHeight, setPreveHeight] = React.useState(0);
-  const [mouseX, setMouseX] = React.useState(0);
-  const [mouseY, setMouseY] = React.useState(0);
-  const [offsetX, setOffsetX] = React.useState(0);
-  const [offsetY, setOffsetY] = React.useState(0);
-  const renderingTaskRef = useRef<RenderTask | any>(null);
+  const [isDrawing, setIsDrawing] = React.useState<boolean>(false);
 
+  const renderingTaskRef = useRef<RenderTask | any>(null);
   const handlePrevious = (): void => {
     if (currentPage > 1) {
       setCurrentPage(currentPage - 1);
@@ -46,54 +34,19 @@ const PDFProvider = ({ onAreaSelected }: PDFProviderProps) => {
     }
   };
 
-  const handleMouseDown = (event: MouseEvent) => {
-    event.preventDefault();
-    event.stopPropagation();
-    const rect = canvasRef.current?.getBoundingClientRect();
-    if (rect) {
-      setStartX(event.clientX - rect?.left);
-      setStartY(event.clientY - rect?.top);
+  const getMousePosition = (
+    canvas: React.MutableRefObject<HTMLCanvasElement | null>,
+    event: MouseEvent
+  ) => {
+    if (canvas.current) {
+      const rect = canvas.current?.getBoundingClientRect();
+      return {
+        x: event.clientX - rect?.left,
+        y: event.clientY - rect.top,
+      };
     }
-    setIsDown(true);
+    return { x: 0, y: 0 };
   };
-
-  const handleMouseUp = (event: MouseEvent) => {
-    event.stopPropagation();
-    event.preventDefault();
-    setIsDown(false);
-    canvasContext?.strokeRect(
-      preveStartX,
-      preveStartY,
-      preveWidth,
-      preveHeight
-    );
-  };
-
-  const handleMouseOut = (event: MouseEvent) => {
-    event.stopPropagation();
-    event.preventDefault();
-    setIsDown(false);
-  };
-
-  const handleMouseMove = (event: MouseEvent) => {
-    event.preventDefault();
-    event.stopPropagation();
-    if (!isDown) return;
-    setMouseX(event.clientX - offsetX);
-    setMouseY(event.clientY - offsetY);
-    const width = mouseX - startX;
-    const height = mouseY - startY;
-    canvasContext?.clearRect(
-      0,
-      0,
-      canvasRef.current?.width || 0,
-      canvasRef.current?.height || 0
-    );
-    canvasContext?.strokeRect(startX, startY, width, height);
-    setPreveStartX(startX);
-    setPreveHeight(startY);
-  };
-
   useEffect(() => {
     const loadPdf = async () => {
       try {
@@ -117,36 +70,10 @@ const PDFProvider = ({ onAreaSelected }: PDFProviderProps) => {
             canvasContext: context,
             viewport: viewport,
           };
-
           // Store the new rendering task
           renderingTaskRef.current = page.render(renderContext);
           try {
             await renderingTaskRef.current.promise;
-            if (canvasRef.current) {
-              setCanvasContext(canvasRef.current?.getContext("2d"));
-              canvasRef.current.addEventListener(
-                "mousedown",
-                handleMouseDown as any
-              );
-              canvasRef.current.addEventListener(
-                "mouseout",
-                handleMouseOut as any
-              );
-              canvasRef.current.addEventListener(
-                "mouseup",
-                handleMouseUp as any
-              );
-              canvasRef.current.addEventListener(
-                "mousemove",
-                handleMouseMove as any
-              );
-              if (canvasContext) {
-                canvasContext.strokeStyle = "blue";
-                canvasContext.lineWidth = 3;
-              }
-              setOffsetX(canvasRef.current.offsetLeft || 0);
-              setOffsetX(canvasRef.current.offsetTop || 0);
-            }
           } catch (error) {
             // Handle cancellation or other errors
             console.error("Rendering task error:", error);
@@ -168,9 +95,37 @@ const PDFProvider = ({ onAreaSelected }: PDFProviderProps) => {
     };
   }, [currentPage]);
 
+  useEffect(() => {});
+
+  const startDrawingRect = ({
+    nativeEvent,
+  }: React.MouseEvent<HTMLCanvasElement, MouseEvent>) => {
+    nativeEvent.preventDefault();
+    nativeEvent.stopPropagation();
+    const { x, y } = getMousePosition(canvasRef, nativeEvent);
+    console.log("cur x->", x);
+    console.log("cur y->", y);
+    setIsDrawing(true);
+  };
+  const drawRect = ({
+    nativeEvent,
+  }: React.MouseEvent<HTMLCanvasElement, MouseEvent>) => {
+    if (!isDrawing) return;
+    nativeEvent.stopPropagation();
+    nativeEvent.preventDefault();
+  };
+  const stopDrawingRect = () => {
+    setIsDrawing(false);
+  };
   return (
     <div className={styles.view_main}>
-      <canvas ref={canvasRef}></canvas>
+      <canvas
+        ref={canvasRef}
+        onMouseDown={startDrawingRect}
+        onMouseMove={drawRect}
+        onMouseUp={stopDrawingRect}
+        onMouseLeave={stopDrawingRect}
+      ></canvas>
       <div className={styles.page_selector}>
         <button
           className={styles.buttons}
