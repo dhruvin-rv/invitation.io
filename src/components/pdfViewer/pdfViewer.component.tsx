@@ -7,27 +7,29 @@ import {
   faChevronRight,
   faChevronLeft,
 } from "@fortawesome/free-solid-svg-icons";
+import { useUploadContext } from "@/context/files.context";
 pdfjs.GlobalWorkerOptions.workerSrc =
   "//cdnjs.cloudflare.com/ajax/libs/pdf.js/3.6.172/pdf.worker.js";
 
-type PDFProviderProps = {
-  onAreaSelected: (startX: number, startY: number) => void;
-};
-
-const PDFProvider = ({ onAreaSelected }: PDFProviderProps) => {
+const PDFProvider = () => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
-  const canvasContext = useRef<CanvasRenderingContext2D | null>(null);
+  const canvasToDraw = useRef<HTMLCanvasElement | null>(null);
   const [currentPage, setCurrentPage] = React.useState<number>(1);
   const [totalPages, setTotalPages] = React.useState<number | null>(null);
   const [isDrawing, setIsDrawing] = React.useState<boolean>(false);
-
+  const [startX, setStartX] = React.useState<number>(0);
+  const [startY, setStartY] = React.useState<number>(0);
+  const [endX, setEndX] = React.useState<number>(0);
+  const [endY, setEndY] = React.useState<number>(0);
+  const [canvasWidth, setCanvasWidth] = React.useState<number>(0);
+  const [canvasHeight, setCanvasHeight] = React.useState<number>(0);
   const renderingTaskRef = useRef<RenderTask | any>(null);
+  const { setSelections, selections } = useUploadContext();
   const handlePrevious = (): void => {
     if (currentPage > 1) {
       setCurrentPage(currentPage - 1);
     }
   };
-
   const handleNext = (): void => {
     if (currentPage < totalPages!) {
       setCurrentPage(currentPage + 1);
@@ -39,10 +41,9 @@ const PDFProvider = ({ onAreaSelected }: PDFProviderProps) => {
     event: MouseEvent
   ) => {
     if (canvas.current) {
-      const rect = canvas.current?.getBoundingClientRect();
       return {
-        x: event.clientX - rect?.left,
-        y: event.clientY - rect.top,
+        x: event.offsetX,
+        y: event.offsetY,
       };
     }
     return { x: 0, y: 0 };
@@ -50,7 +51,7 @@ const PDFProvider = ({ onAreaSelected }: PDFProviderProps) => {
   useEffect(() => {
     const loadPdf = async () => {
       try {
-        const pdf = await pdfjs.getDocument("nodedev.pdf").promise;
+        const pdf = await pdfjs.getDocument("sample.pdf").promise;
         setTotalPages(pdf.numPages);
         const page = await pdf.getPage(currentPage);
         const scale = 1;
@@ -60,7 +61,8 @@ const PDFProvider = ({ onAreaSelected }: PDFProviderProps) => {
           const context = canvas.getContext("2d")!;
           canvas.height = viewport.height;
           canvas.width = viewport.width;
-
+          setCanvasWidth(viewport.width);
+          setCanvasHeight(viewport.height);
           // Cancel previous rendering task, if any
           if (renderingTaskRef.current) {
             renderingTaskRef.current.cancel();
@@ -84,48 +86,100 @@ const PDFProvider = ({ onAreaSelected }: PDFProviderProps) => {
       }
     };
 
-    // Delay starting new rendering task to avoid conflicts
-    const delay = 300; // Adjust this delay as needed
+    const delay = 300;
     const timeoutId = setTimeout(() => {
       loadPdf();
     }, delay);
 
     return () => {
-      clearTimeout(timeoutId); // Clear the timeout if the component unmounts
+      clearTimeout(timeoutId);
     };
   }, [currentPage]);
 
-  useEffect(() => {});
+  useEffect(() => {
+    const drawCanvas = canvasToDraw.current;
+    if (drawCanvas) {
+      console.log(canvasHeight, canvasWidth);
+      drawCanvas.height = canvasHeight;
+      drawCanvas.width = canvasWidth;
+    }
+  }, [canvasHeight, canvasWidth]);
 
   const startDrawingRect = ({
     nativeEvent,
   }: React.MouseEvent<HTMLCanvasElement, MouseEvent>) => {
     nativeEvent.preventDefault();
     nativeEvent.stopPropagation();
-    const { x, y } = getMousePosition(canvasRef, nativeEvent);
-    console.log("cur x->", x);
-    console.log("cur y->", y);
+    const { x, y } = getMousePosition(canvasToDraw, nativeEvent);
+    setStartX(x);
+    setStartY(y);
+    setEndX(x);
+    setEndY(y);
     setIsDrawing(true);
   };
+
   const drawRect = ({
     nativeEvent,
   }: React.MouseEvent<HTMLCanvasElement, MouseEvent>) => {
     if (!isDrawing) return;
     nativeEvent.stopPropagation();
     nativeEvent.preventDefault();
+
+    const { x, y } = getMousePosition(canvasToDraw, nativeEvent);
+    setEndX(x);
+    setEndY(y);
+
+    const context = canvasToDraw.current?.getContext("2d");
+    if (canvasToDraw.current && isDrawing) {
+      context?.clearRect(
+        0,
+        0,
+        canvasToDraw.current.width,
+        canvasToDraw.current.height
+      );
+      context?.setLineDash([5]);
+      context?.strokeRect(startX, startY, endX - startX, endY - startY);
+    }
   };
+
+  const drawOnMainCanvas = (sx: number, sy: number, ex: number, ey: number) => {
+    const context = canvasRef.current?.getContext("2d");
+    if (canvasToDraw.current && isDrawing) {
+      context?.setLineDash([5]);
+      context?.strokeRect(sx, sy, ex, ey);
+    }
+  };
+
   const stopDrawingRect = () => {
+    if (!isDrawing) return;
+    drawOnMainCanvas(startX, startY, endX - startX, endY - startY);
+    setSelections([
+      ...selections,
+      { location: { x: startX, y: startY }, pageNumber: currentPage },
+    ]);
     setIsDrawing(false);
+    setEndX(0);
+    setEndY(0);
   };
   return (
     <div className={styles.view_main}>
-      <canvas
-        ref={canvasRef}
-        onMouseDown={startDrawingRect}
-        onMouseMove={drawRect}
-        onMouseUp={stopDrawingRect}
-        onMouseLeave={stopDrawingRect}
-      ></canvas>
+      <div style={{ position: "relative" }}>
+        <canvas ref={canvasRef}></canvas>
+        <canvas
+          style={{
+            position: "absolute",
+            top: "0",
+            bottom: "0",
+            left: "0",
+            right: "0",
+          }}
+          ref={canvasToDraw}
+          onMouseDown={startDrawingRect}
+          onMouseMove={drawRect}
+          onMouseUp={stopDrawingRect}
+          onMouseLeave={stopDrawingRect}
+        ></canvas>
+      </div>
       <div className={styles.page_selector}>
         <button
           className={styles.buttons}

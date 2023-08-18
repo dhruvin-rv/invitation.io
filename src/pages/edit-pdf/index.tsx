@@ -14,10 +14,6 @@ const EditPdf = () => {
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFontSize(+e.target.value);
   };
-  const handleAreaSelected = (x, y) => {
-    // Do something with the selected area's x and y positions
-    console.log("Selected area position:", x, y);
-  };
 
   return (
     <>
@@ -48,7 +44,7 @@ const EditPdf = () => {
           </div>
         </div>
       </div>
-      <PDFProvider onAreaSelected={handleAreaSelected} />
+      <PDFProvider />
     </>
   );
 };
