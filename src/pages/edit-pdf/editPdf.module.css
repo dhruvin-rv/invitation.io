@@ -52,6 +52,11 @@
     flex-shrink: 0;
 }
 
+.dragSelection.active {
+    border-color: #117777;
+    background-color: #e7f1f1;
+}
+
 .dragSelection:hover {
     background: #E7E7E7;
 

@@ -5,6 +5,7 @@ import { faObjectUngroup } from "@fortawesome/free-regular-svg-icons";
 import PDFProvider from "../../components/pdfViewer/pdfViewer.component";
 const EditPdf = () => {
   let [fontSize, setFontSize] = useState<number>(12);
+  const [isSelecting, setIsSelecting] = useState<boolean>(false);
   const handleIncrease = (): void => {
     setFontSize(fontSize + 1);
   };
@@ -14,12 +15,20 @@ const EditPdf = () => {
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFontSize(+e.target.value);
   };
+  const onSelectionClick = (): void => {
+    setIsSelecting(!isSelecting);
+  };
 
   return (
     <>
       <div style={{ borderRadius: " 3px", border: "1px solid #E7E7E7" }}>
         <div className={styles.toolsBar}>
-          <button className={styles.dragSelection}>
+          <button
+            onClick={onSelectionClick}
+            className={`${styles.dragSelection} ${
+              isSelecting && styles.active
+            }`}
+          >
             Select Area <FontAwesomeIcon icon={faObjectUngroup} />
           </button>
           <select
@@ -44,7 +53,7 @@ const EditPdf = () => {
           </div>
         </div>
       </div>
-      <PDFProvider />
+      <PDFProvider selectMode={isSelecting} />
     </>
   );
 };

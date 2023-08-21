@@ -10,8 +10,10 @@ import {
 import { useUploadContext } from "@/context/files.context";
 pdfjs.GlobalWorkerOptions.workerSrc =
   "//cdnjs.cloudflare.com/ajax/libs/pdf.js/3.6.172/pdf.worker.js";
-
-const PDFProvider = () => {
+interface PDFProviderProps {
+  selectMode: boolean;
+}
+const PDFProvider = ({ selectMode }: PDFProviderProps) => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const canvasToDraw = useRef<HTMLCanvasElement | null>(null);
   const [currentPage, setCurrentPage] = React.useState<number>(1);
@@ -25,11 +27,13 @@ const PDFProvider = () => {
   const [canvasHeight, setCanvasHeight] = React.useState<number>(0);
   const renderingTaskRef = useRef<RenderTask | any>(null);
   const { setSelections, selections } = useUploadContext();
+
   const handlePrevious = (): void => {
     if (currentPage > 1) {
       setCurrentPage(currentPage - 1);
     }
   };
+
   const handleNext = (): void => {
     if (currentPage < totalPages!) {
       setCurrentPage(currentPage + 1);
@@ -48,10 +52,11 @@ const PDFProvider = () => {
     }
     return { x: 0, y: 0 };
   };
+
   useEffect(() => {
     const loadPdf = async () => {
       try {
-        const pdf = await pdfjs.getDocument("sample.pdf").promise;
+        const pdf = await pdfjs.getDocument("nodedev.pdf").promise;
         setTotalPages(pdf.numPages);
         const page = await pdf.getPage(currentPage);
         const scale = 1;
@@ -76,6 +81,26 @@ const PDFProvider = () => {
           renderingTaskRef.current = page.render(renderContext);
           try {
             await renderingTaskRef.current.promise;
+            const currentSelections = selections.filter(
+              (e) => e.pageNumber == currentPage
+            );
+            currentSelections.map((e) => {
+              drawOnPageChange(
+                e.location.x,
+                e.location.y,
+                e.location.xe,
+                e.location.ye
+              );
+            });
+            const context = canvasToDraw.current?.getContext("2d");
+            if (canvasToDraw.current) {
+              context?.clearRect(
+                0,
+                0,
+                canvasToDraw.current.width,
+                canvasToDraw.current.height
+              );
+            }
           } catch (error) {
             // Handle cancellation or other errors
             console.error("Rendering task error:", error);
@@ -99,7 +124,6 @@ const PDFProvider = () => {
   useEffect(() => {
     const drawCanvas = canvasToDraw.current;
     if (drawCanvas) {
-      console.log(canvasHeight, canvasWidth);
       drawCanvas.height = canvasHeight;
       drawCanvas.width = canvasWidth;
     }
@@ -108,14 +132,16 @@ const PDFProvider = () => {
   const startDrawingRect = ({
     nativeEvent,
   }: React.MouseEvent<HTMLCanvasElement, MouseEvent>) => {
-    nativeEvent.preventDefault();
-    nativeEvent.stopPropagation();
-    const { x, y } = getMousePosition(canvasToDraw, nativeEvent);
-    setStartX(x);
-    setStartY(y);
-    setEndX(x);
-    setEndY(y);
-    setIsDrawing(true);
+    if (selectMode) {
+      nativeEvent.preventDefault();
+      nativeEvent.stopPropagation();
+      const { x, y } = getMousePosition(canvasToDraw, nativeEvent);
+      setStartX(x);
+      setStartY(y);
+      setEndX(x);
+      setEndY(y);
+      setIsDrawing(true);
+    }
   };
 
   const drawRect = ({
@@ -150,17 +176,35 @@ const PDFProvider = () => {
     }
   };
 
+  const drawOnPageChange = (sx: number, sy: number, ex: number, ey: number) => {
+    const context = canvasRef.current?.getContext("2d");
+    if (canvasToDraw.current) {
+      context?.setLineDash([5]);
+      context?.strokeRect(sx, sy, ex, ey);
+    }
+  };
+
   const stopDrawingRect = () => {
     if (!isDrawing) return;
     drawOnMainCanvas(startX, startY, endX - startX, endY - startY);
     setSelections([
       ...selections,
-      { location: { x: startX, y: startY }, pageNumber: currentPage },
+      {
+        location: {
+          x: startX,
+          y: startY,
+          xe: endX - startX,
+          ye: endY - startY,
+        },
+        pageNumber: currentPage,
+      },
     ]);
+
     setIsDrawing(false);
     setEndX(0);
     setEndY(0);
   };
+
   return (
     <div className={styles.view_main}>
       <div style={{ position: "relative" }}>
@@ -179,6 +223,22 @@ const PDFProvider = () => {
           onMouseUp={stopDrawingRect}
           onMouseLeave={stopDrawingRect}
         ></canvas>
+
+        <div
+          style={{
+            position: "absolute",
+            left: 72,
+            top: 32,
+            background: "white",
+            border: "1px solid #ccc",
+            padding: "5px",
+          }}
+        >
+          <select>
+            <option>Option 1</option>
+            <option>Option 2</option>
+          </select>
+        </div>
       </div>
       <div className={styles.page_selector}>
         <button
