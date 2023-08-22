@@ -27,7 +27,7 @@ const PDFProvider = ({ selectMode }: PDFProviderProps) => {
   const [canvasHeight, setCanvasHeight] = React.useState<number>(0);
   const renderingTaskRef = useRef<RenderTask | any>(null);
   const { setSelections, selections } = useUploadContext();
-
+  const [selectedValues, setSelectedValues] = React.useState<Array<string>>([]);
   const handlePrevious = (): void => {
     if (currentPage > 1) {
       setCurrentPage(currentPage - 1);
@@ -129,6 +129,7 @@ const PDFProvider = ({ selectMode }: PDFProviderProps) => {
     }
   }, [canvasHeight, canvasWidth]);
 
+  // useEffect(() => {}, [selections]);
   const startDrawingRect = ({
     nativeEvent,
   }: React.MouseEvent<HTMLCanvasElement, MouseEvent>) => {
@@ -197,12 +198,35 @@ const PDFProvider = ({ selectMode }: PDFProviderProps) => {
           ye: endY - startY,
         },
         pageNumber: currentPage,
+        selectedOption: null,
       },
     ]);
 
     setIsDrawing(false);
     setEndX(0);
     setEndY(0);
+  };
+
+  const handleDropdownChange = (
+    event: React.ChangeEvent<HTMLSelectElement>,
+    index: number
+  ) => {
+    const newValue = event.target.value;
+    setSelectedValues((prevSelectedValues) => {
+      const updatedValues = [...prevSelectedValues];
+      updatedValues[index] = newValue;
+      return updatedValues;
+    });
+    const updatedSelections = selections.map((selection, i) => {
+      if (i === index) {
+        return {
+          ...selection,
+          selectedOption: newValue,
+        };
+      }
+      return selection;
+    });
+    setSelections(updatedSelections);
   };
 
   return (
@@ -223,22 +247,27 @@ const PDFProvider = ({ selectMode }: PDFProviderProps) => {
           onMouseUp={stopDrawingRect}
           onMouseLeave={stopDrawingRect}
         ></canvas>
-
-        <div
-          style={{
-            position: "absolute",
-            left: 72,
-            top: 32,
-            background: "white",
-            border: "1px solid #ccc",
-            padding: "5px",
-          }}
-        >
-          <select>
-            <option>Option 1</option>
-            <option>Option 2</option>
-          </select>
-        </div>
+        {selections.map((selection, index) => (
+          <div
+            key={index}
+            style={{
+              position: "absolute",
+              left: selection.location.x,
+              top: selection.location.y + selection.location.ye,
+              background: "white",
+              border: "1px solid #ccc",
+              padding: "5px",
+            }}
+          >
+            <select
+              value={selectedValues[index] || ""}
+              onChange={(e) => handleDropdownChange(e, index)}
+            >
+              <option>Option 1</option>
+              <option>Option 2</option>
+            </select>
+          </div>
+        ))}
       </div>
       <div className={styles.page_selector}>
         <button

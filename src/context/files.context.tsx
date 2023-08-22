@@ -6,6 +6,7 @@ interface UploadContextProps {
 type CanvasSelection = {
   readonly location: { x: number; y: number; xe: number; ye: number };
   readonly pageNumber: number;
+  readonly selectedOption?: string | null;
 };
 interface UploadContextValue {
   uploadedFile: File | null;
