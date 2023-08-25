@@ -8,6 +8,7 @@ import {
   faChevronLeft,
 } from "@fortawesome/free-solid-svg-icons";
 import { useUploadContext } from "@/context/files.context";
+import { useRouter } from "next/router";
 pdfjs.GlobalWorkerOptions.workerSrc =
   "//cdnjs.cloudflare.com/ajax/libs/pdf.js/3.6.172/pdf.worker.js";
 interface PDFProviderProps {
@@ -26,8 +27,11 @@ const PDFProvider = ({ selectMode }: PDFProviderProps) => {
   const [canvasWidth, setCanvasWidth] = React.useState<number>(0);
   const [canvasHeight, setCanvasHeight] = React.useState<number>(0);
   const renderingTaskRef = useRef<RenderTask | any>(null);
-  const { setSelections, selections } = useUploadContext();
+  const { setSelections, selections, csvFile, setIsSelected } =
+    useUploadContext();
   const [selectedValues, setSelectedValues] = React.useState<Array<string>>([]);
+  const [columns, setColumns] = React.useState<Array<string>>([]);
+  const router = useRouter();
   const handlePrevious = (): void => {
     if (currentPage > 1) {
       setCurrentPage(currentPage - 1);
@@ -52,6 +56,19 @@ const PDFProvider = ({ selectMode }: PDFProviderProps) => {
     }
     return { x: 0, y: 0 };
   };
+  useEffect(() => {
+    if (csvFile) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const text: any = e.target?.result;
+        const lines = text.split("\n");
+        setColumns(lines[0].split(","));
+      };
+      reader.readAsText(csvFile);
+    } else {
+      router.push("/upload-csv");
+    }
+  }, []);
 
   useEffect(() => {
     const loadPdf = async () => {
@@ -129,7 +146,6 @@ const PDFProvider = ({ selectMode }: PDFProviderProps) => {
     }
   }, [canvasHeight, canvasWidth]);
 
-  // useEffect(() => {}, [selections]);
   const startDrawingRect = ({
     nativeEvent,
   }: React.MouseEvent<HTMLCanvasElement, MouseEvent>) => {
@@ -175,6 +191,7 @@ const PDFProvider = ({ selectMode }: PDFProviderProps) => {
       context?.setLineDash([5]);
       context?.strokeRect(sx, sy, ex, ey);
     }
+    setIsSelected(false);
   };
 
   const drawOnPageChange = (sx: number, sy: number, ex: number, ey: number) => {
@@ -217,16 +234,31 @@ const PDFProvider = ({ selectMode }: PDFProviderProps) => {
       updatedValues[index] = newValue;
       return updatedValues;
     });
-    const updatedSelections = selections.map((selection, i) => {
-      if (i === index) {
-        return {
-          ...selection,
-          selectedOption: newValue,
-        };
-      }
-      return selection;
-    });
-    setSelections(updatedSelections);
+    if (newValue === "0") {
+      const updatedSelections = selections.map((selection, i) => {
+        if (i === index) {
+          return {
+            ...selection,
+            selectedOption: null,
+          };
+        }
+        return selection;
+      });
+      setSelections(updatedSelections);
+      setIsSelected(false);
+    } else {
+      const updatedSelections = selections.map((selection, i) => {
+        if (i === index) {
+          return {
+            ...selection,
+            selectedOption: newValue,
+          };
+        }
+        return selection;
+      });
+      setSelections(updatedSelections);
+      setIsSelected(true);
+    }
   };
 
   return (
@@ -247,7 +279,7 @@ const PDFProvider = ({ selectMode }: PDFProviderProps) => {
           onMouseUp={stopDrawingRect}
           onMouseLeave={stopDrawingRect}
         ></canvas>
-        {selections.map((selection, index) => (
+        {selections?.map((selection, index) => (
           <div
             key={index}
             style={{
@@ -260,11 +292,18 @@ const PDFProvider = ({ selectMode }: PDFProviderProps) => {
             }}
           >
             <select
+              style={{
+                border: "none",
+              }}
               value={selectedValues[index] || ""}
               onChange={(e) => handleDropdownChange(e, index)}
             >
-              <option>Option 1</option>
-              <option>Option 2</option>
+              <option value={0}>Select Row</option>
+              {columns.map((column, columnIndex) => (
+                <option key={columnIndex} value={column}>
+                  {column}
+                </option>
+              ))}
             </select>
           </div>
         ))}

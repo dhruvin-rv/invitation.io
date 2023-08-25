@@ -68,9 +68,7 @@ const FileUpload: React.FC<FilesDragAndDropProps & { buttonText: string }> = ({
     }
   };
   const handleButtonUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    console.log("handle button event triggered");
     const { files } = e.target;
-    console.log(files);
     if (files && files.length) {
       setFileSelected(files[0].name);
       onUpload(files);
