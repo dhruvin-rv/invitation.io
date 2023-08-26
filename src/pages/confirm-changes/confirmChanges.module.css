@@ -46,6 +46,7 @@
     flex-direction: column;
     justify-content: space-between;
     background-color: #EFF4FF;
+    gap: 20px;
     padding-bottom: 20px;
 
 }
@@ -60,4 +61,30 @@
     -webkit-box-shadow: 0px 0px 14px 0px rgba(0, 0, 0, 0.23);
     -moz-box-shadow: 0px 0px 14px 0px rgba(0, 0, 0, 0.23);
     box-shadow: 0px 0px 14px 0px rgba(0, 0, 0, 0.23);
+}
+
+.buttons {
+    border-radius: 50%;
+    height: 50px;
+    width: 50px;
+    text-align: center;
+    background-color: #486BBC;
+    color: white;
+    border: none;
+    font-size: 20px;
+}
+
+.buttons:disabled {
+    background-color: #819ee2;
+    cursor: not-allowed;
+}
+
+.page_selector {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-around;
+    gap: 10px;
+    font-size: 20px;
+    font-weight: 500;
 }

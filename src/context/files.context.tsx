@@ -8,6 +8,11 @@ type CanvasSelection = {
   readonly pageNumber: number;
   readonly selectedOption?: string | null;
 };
+
+type ColumnsData = {
+  [key: string]: string;
+};
+
 interface UploadContextValue {
   uploadedFile: File | null;
   setUploadedFile: (file: File | null) => void;
@@ -17,6 +22,8 @@ interface UploadContextValue {
   setSelections: (selection: CanvasSelection[]) => void;
   isSelected: boolean;
   setIsSelected: (isSelected: boolean) => void;
+  columns: ColumnsData | null;
+  setColumns: (data: ColumnsData) => void;
 }
 
 const UploadContext = createContext<UploadContextValue | undefined>(undefined);
@@ -26,7 +33,7 @@ export const UploadProvider: React.FC<UploadContextProps> = ({ children }) => {
   const [csvFile, setCsvFile] = useState<File | null>(null);
   const [selections, setSelections] = useState<CanvasSelection[]>([]);
   const [isSelected, setIsSelected] = useState<boolean>(false);
-
+  const [columns, setColumns] = useState<ColumnsData | null>(null);
   return (
     <UploadContext.Provider
       value={{
@@ -38,6 +45,8 @@ export const UploadProvider: React.FC<UploadContextProps> = ({ children }) => {
         setSelections,
         isSelected,
         setIsSelected,
+        columns,
+        setColumns,
       }}
     >
       {children}
