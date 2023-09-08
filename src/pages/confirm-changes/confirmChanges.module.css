@@ -88,3 +88,38 @@
     font-size: 20px;
     font-weight: 500;
 }
+
+.download_option {
+    padding: 5px;
+    color: #000;
+    background-color: #EDEDED;
+    border-radius: 10px;
+    font-size: medium;
+    height: 35px;
+    border: none;
+}
+
+.download_option:hover {
+    background-color: #dbdbdb;
+}
+
+
+.download_option option {
+    background-color: #fff;
+    color: #000;
+    font-size: medium;
+}
+
+.download_button {
+    width: 80px;
+    height: 35px;
+    border-radius: 10px;
+    border: 0;
+    background: #486BBC;
+    color: #fff;
+}
+
+.download_button:hover {
+    border: 1px solid black;
+    cursor: pointer
+}

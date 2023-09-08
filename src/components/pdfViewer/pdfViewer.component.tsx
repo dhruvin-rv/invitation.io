@@ -9,6 +9,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { useUploadContext } from "@/context/files.context";
 import { useRouter } from "next/router";
+import { toast } from "react-toastify";
 pdfjs.GlobalWorkerOptions.workerSrc =
   "//cdnjs.cloudflare.com/ajax/libs/pdf.js/3.6.172/pdf.worker.js";
 interface PDFProviderProps {
@@ -27,11 +28,12 @@ const PDFProvider = ({ selectMode }: PDFProviderProps) => {
   const [canvasWidth, setCanvasWidth] = React.useState<number>(0);
   const [canvasHeight, setCanvasHeight] = React.useState<number>(0);
   const renderingTaskRef = useRef<RenderTask | any>(null);
-  const { setSelections, selections, csvFile, setIsSelected } =
+  const { setSelections, selections, csvFile, setIsSelected, isSelected } =
     useUploadContext();
   const [selectedValues, setSelectedValues] = React.useState<Array<string>>([]);
   const [columns, setColumns] = React.useState<Array<string>>([]);
   const router = useRouter();
+
   const handlePrevious = (): void => {
     if (currentPage > 1) {
       setCurrentPage(currentPage - 1);
@@ -56,6 +58,7 @@ const PDFProvider = ({ selectMode }: PDFProviderProps) => {
     }
     return { x: 0, y: 0 };
   };
+
   useEffect(() => {
     if (csvFile) {
       const reader = new FileReader();
@@ -149,15 +152,28 @@ const PDFProvider = ({ selectMode }: PDFProviderProps) => {
   const startDrawingRect = ({
     nativeEvent,
   }: React.MouseEvent<HTMLCanvasElement, MouseEvent>) => {
-    if (selectMode) {
-      nativeEvent.preventDefault();
-      nativeEvent.stopPropagation();
-      const { x, y } = getMousePosition(canvasToDraw, nativeEvent);
-      setStartX(x);
-      setStartY(y);
-      setEndX(x);
-      setEndY(y);
-      setIsDrawing(true);
+    if (selections.length > 0 && !isSelected) {
+      return toast.error(
+        "Please select the column for previous selection to create new selection"
+      );
+    }
+    if (
+      selections.length > 0 &&
+      (!selections[selections.length - 1].font ||
+        selections[selections.length - 1].font == "N/A")
+    ) {
+      toast.error("Please select the font for previous selection");
+    } else {
+      if (selectMode) {
+        nativeEvent.preventDefault();
+        nativeEvent.stopPropagation();
+        const { x, y } = getMousePosition(canvasToDraw, nativeEvent);
+        setStartX(x);
+        setStartY(y);
+        setEndX(x);
+        setEndY(y);
+        setIsDrawing(true);
+      }
     }
   };
 
@@ -216,6 +232,9 @@ const PDFProvider = ({ selectMode }: PDFProviderProps) => {
         },
         pageNumber: currentPage,
         selectedOption: null,
+        font: null,
+        font_size: null,
+        font_color: null,
       },
     ]);
 
@@ -229,6 +248,8 @@ const PDFProvider = ({ selectMode }: PDFProviderProps) => {
     index: number
   ) => {
     const newValue = event.target.value;
+    console.log("new value -->", newValue);
+    console.log("index --->", index);
     setSelectedValues((prevSelectedValues) => {
       const updatedValues = [...prevSelectedValues];
       updatedValues[index] = newValue;
@@ -252,6 +273,7 @@ const PDFProvider = ({ selectMode }: PDFProviderProps) => {
           return {
             ...selection,
             selectedOption: newValue,
+            font_size: 12,
           };
         }
         return selection;
@@ -279,34 +301,38 @@ const PDFProvider = ({ selectMode }: PDFProviderProps) => {
           onMouseUp={stopDrawingRect}
           onMouseLeave={stopDrawingRect}
         ></canvas>
-        {selections?.map((selection, index) => (
-          <div
-            key={index}
-            style={{
-              position: "absolute",
-              left: selection.location.x,
-              top: selection.location.y + selection.location.ye,
-              background: "white",
-              border: "1px solid #ccc",
-              padding: "5px",
-            }}
-          >
-            <select
-              style={{
-                border: "none",
-              }}
-              value={selectedValues[index] || ""}
-              onChange={(e) => handleDropdownChange(e, index)}
-            >
-              <option value={0}>Select Row</option>
-              {columns.map((column, columnIndex) => (
-                <option key={columnIndex} value={column}>
-                  {column}
-                </option>
-              ))}
-            </select>
-          </div>
-        ))}
+        {selections.map((selection, index) => {
+          if (selection.pageNumber == currentPage) {
+            return (
+              <div
+                key={index}
+                style={{
+                  position: "absolute",
+                  left: selection.location.x,
+                  top: selection.location.y + selection.location.ye,
+                  background: "white",
+                  border: "1px solid #ccc",
+                  padding: "5px",
+                }}
+              >
+                <select
+                  style={{
+                    border: "none",
+                  }}
+                  value={selectedValues[index] || ""}
+                  onChange={(e) => handleDropdownChange(e, index)}
+                >
+                  <option value={0}>Select Row</option>
+                  {columns.map((column, columnIndex) => (
+                    <option key={columnIndex} value={column}>
+                      {column}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            );
+          }
+        })}
       </div>
       <div className={styles.page_selector}>
         <button

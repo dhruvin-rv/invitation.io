@@ -3,6 +3,7 @@ import React from "react";
 import playStoreLogo from "../../../public/images/play_store_logo.svg";
 import appStoreLogo from "../../../public/images/app_store_logo.svg";
 import styles from "./footer.module.css";
+import Link from "next/link";
 const Footer = () => {
   return (
     <>
@@ -14,7 +15,7 @@ const Footer = () => {
               Our Web PDF Editor is a powerful online tool designed to simplify
               your document management and editing tasks.
             </p>
-            <a href="/about-us">Read More</a>
+            <Link href="/about-us">Read More</Link>
           </div>
           <div className={styles.footer_main_sec}>
             <h2>GET THE FREE APP</h2>
@@ -35,9 +36,9 @@ const Footer = () => {
         <div className={styles.footer_sec}>
           <p>© 2023 invitation ai, Inc.</p>
           <div>
-            <a href="#">Privacy Policy</a>
+            <Link href="#">Privacy Policy</Link>
             <span> | </span>
-            <a href="#">Terms & Conditions</a>
+            <Link href="#">Terms & Conditions</Link>
           </div>
         </div>
       </footer>

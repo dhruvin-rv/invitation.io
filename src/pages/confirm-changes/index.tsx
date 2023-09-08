@@ -16,9 +16,11 @@ pdfjs.GlobalWorkerOptions.workerSrc =
 const ConfirmChanges = () => {
   const [currentPage, setCurrentPage] = React.useState<number>(1);
   const [totalPages, setTotalPages] = React.useState<number | null>(null);
+  const [isContinue, setIsContinue] = React.useState<boolean>(false);
   const renderingTaskRef = useRef<RenderTask | any>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
-  const { selections, columns } = useUploadContext();
+  const { selections, columns, setDownloadOption, downloadOption } =
+    useUploadContext();
   const router = useRouter();
   const handlePrevious = (): void => {
     if (currentPage > 1) {
@@ -33,6 +35,9 @@ const ConfirmChanges = () => {
   };
 
   useEffect(() => {
+    if (!selections.length && !columns.length) {
+      router.push("upload-csv");
+    }
     const loadPdf = async () => {
       try {
         const pdf = await pdfjs.getDocument("nodedev.pdf").promise;
@@ -55,28 +60,27 @@ const ConfirmChanges = () => {
           renderingTaskRef.current = page.render(renderContext);
           try {
             await renderingTaskRef.current.promise;
-            console.log("columns --->", columns);
-            // if (csvData.length > 0) {
-            //   const canvas = canvasRef.current;
-            //   const context = canvas?.getContext("2d");
-            //   if (context) {
-            //     selections.map((e, i) => {
-            //       console.log("selection -->", e);
-            //       if (e.selectedOption) {
-            //         console.log("selection 1 -->", e);
-            //         context.fillStyle = "blue";
-            //         context.font = "bold 16px Arial";
-            //         context.textAlign = "left";
-            //         context.textBaseline = "bottom";
-            //         context.fillText(
-            //           csvData[0][e.selectedOption],
-            //           e.location.x,
-            //           e.location.y + e.location.ye
-            //         );
-            //       }
-            //     });
-            //   }
-            // }
+            console.log("selections -->", selections);
+            console.log("columns -->", columns);
+            const currentSelections = selections.filter((e) => {
+              return e.pageNumber == currentPage;
+            });
+            console.log("current selection --->", currentSelections);
+            currentSelections.map((e, i) => {
+              if (e.selectedOption) {
+                context.fillStyle = "blue";
+                context.font = `${e.font_size + "px" || "16px"} ${
+                  e.font || "Roboto"
+                }`;
+                context.textAlign = "left";
+                context.textBaseline = "bottom";
+                context.fillText(
+                  columns[0][e.selectedOption],
+                  e.location.x,
+                  e.location.y + e.location.ye
+                );
+              }
+            });
           } catch (error) {
             console.error("Rendering task error:", error);
           }
@@ -91,15 +95,55 @@ const ConfirmChanges = () => {
   return (
     <>
       <div className={styles.navs}>
-        <button className={styles.start_over_btn}>
-          <FontAwesomeIcon
-            icon={faArrowRotateRight}
-            flip="horizontal"
-            style={{ color: "#2a61c0", marginRight: "5px" }}
-          />
-          Start Over
-        </button>
-        <button className={styles.continue_btn}>Continue & Download</button>
+        {isContinue ? (
+          <>
+            <select
+              className={styles.download_option}
+              name="download_option"
+              id="download_option"
+              style={{ textAlign: "center" }}
+              onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
+                setDownloadOption(e.target.value);
+              }}
+            >
+              <option value="N/A">Select Option</option>
+              {Object.keys(columns[0]).map((o, i) => {
+                return (
+                  <option value={o} key={i}>
+                    Download By {o}
+                  </option>
+                );
+              })}
+            </select>
+            {downloadOption !== null && downloadOption !== "N/A" && (
+              <button className={styles.download_button}>Download</button>
+            )}
+          </>
+        ) : (
+          <>
+            <button
+              className={styles.start_over_btn}
+              onClick={() => {
+                router.push("upload-file");
+              }}
+            >
+              <FontAwesomeIcon
+                icon={faArrowRotateRight}
+                flip="horizontal"
+                style={{ color: "#2a61c0", marginRight: "5px" }}
+              />
+              Start Over
+            </button>
+            <button
+              className={styles.continue_btn}
+              onClick={() => {
+                setIsContinue(true);
+              }}
+            >
+              Continue & Download
+            </button>
+          </>
+        )}
       </div>
       <div className={styles.main_view}>
         <div>

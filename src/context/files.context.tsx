@@ -7,6 +7,9 @@ type CanvasSelection = {
   readonly location: { x: number; y: number; xe: number; ye: number };
   readonly pageNumber: number;
   readonly selectedOption?: string | null;
+  readonly font: string | null;
+  readonly font_size: number | null;
+  readonly font_color: string | null;
 };
 
 type ColumnsData = {
@@ -19,11 +22,13 @@ interface UploadContextValue {
   csvFile: File | null;
   setCsvFile: (file: File | null) => void;
   selections: CanvasSelection[];
-  setSelections: (selection: CanvasSelection[]) => void;
+  setSelections: React.Dispatch<React.SetStateAction<CanvasSelection[]>>;
   isSelected: boolean;
   setIsSelected: (isSelected: boolean) => void;
-  columns: ColumnsData[] | null;
+  columns: ColumnsData[];
   setColumns: (data: ColumnsData[]) => void;
+  downloadOption: string | null;
+  setDownloadOption: (option: string) => void;
 }
 
 const UploadContext = createContext<UploadContextValue | undefined>(undefined);
@@ -33,7 +38,8 @@ export const UploadProvider: React.FC<UploadContextProps> = ({ children }) => {
   const [csvFile, setCsvFile] = useState<File | null>(null);
   const [selections, setSelections] = useState<CanvasSelection[]>([]);
   const [isSelected, setIsSelected] = useState<boolean>(false);
-  const [columns, setColumns] = useState<ColumnsData[] | null>(null);
+  const [columns, setColumns] = useState<ColumnsData[]>([]);
+  const [downloadOption, setDownloadOption] = useState<string | null>(null);
   return (
     <UploadContext.Provider
       value={{
@@ -47,6 +53,8 @@ export const UploadProvider: React.FC<UploadContextProps> = ({ children }) => {
         setIsSelected,
         columns,
         setColumns,
+        downloadOption,
+        setDownloadOption,
       }}
     >
       {children}
