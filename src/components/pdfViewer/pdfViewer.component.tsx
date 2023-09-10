@@ -28,8 +28,14 @@ const PDFProvider = ({ selectMode }: PDFProviderProps) => {
   const [canvasWidth, setCanvasWidth] = React.useState<number>(0);
   const [canvasHeight, setCanvasHeight] = React.useState<number>(0);
   const renderingTaskRef = useRef<RenderTask | any>(null);
-  const { setSelections, selections, csvFile, setIsSelected, isSelected } =
-    useUploadContext();
+  const {
+    setSelections,
+    selections,
+    csvFile,
+    setIsSelected,
+    isSelected,
+    uploadedFile,
+  } = useUploadContext();
   const [selectedValues, setSelectedValues] = React.useState<Array<string>>([]);
   const [columns, setColumns] = React.useState<Array<string>>([]);
   const router = useRouter();
@@ -76,7 +82,11 @@ const PDFProvider = ({ selectMode }: PDFProviderProps) => {
   useEffect(() => {
     const loadPdf = async () => {
       try {
-        const pdf = await pdfjs.getDocument("nodedev.pdf").promise;
+        if (!uploadedFile) {
+          return router.push("upload-file");
+        }
+        const pdf = await pdfjs.getDocument(await uploadedFile?.arrayBuffer())
+          .promise;
         setTotalPages(pdf.numPages);
         const page = await pdf.getPage(currentPage);
         const scale = 1;
@@ -234,7 +244,7 @@ const PDFProvider = ({ selectMode }: PDFProviderProps) => {
         selectedOption: null,
         font: null,
         font_size: null,
-        font_color: null,
+        font_color: "#000000",
       },
     ]);
 

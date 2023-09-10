@@ -10,6 +10,8 @@ import { pdfjs } from "react-pdf";
 import { RenderTask } from "pdfjs-dist";
 import { useUploadContext } from "@/context/files.context";
 import { useRouter } from "next/router";
+import Link from "next/link";
+import { modifyPdf } from "@/utils/pdfGenrator";
 pdfjs.GlobalWorkerOptions.workerSrc =
   "//cdnjs.cloudflare.com/ajax/libs/pdf.js/3.6.172/pdf.worker.js";
 
@@ -19,8 +21,14 @@ const ConfirmChanges = () => {
   const [isContinue, setIsContinue] = React.useState<boolean>(false);
   const renderingTaskRef = useRef<RenderTask | any>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
-  const { selections, columns, setDownloadOption, downloadOption } =
-    useUploadContext();
+  const {
+    selections,
+    columns,
+    setDownloadOption,
+    downloadOption,
+    uploadedFile,
+    pdfWidth,
+  } = useUploadContext();
   const router = useRouter();
   const handlePrevious = (): void => {
     if (currentPage > 1) {
@@ -40,7 +48,11 @@ const ConfirmChanges = () => {
     }
     const loadPdf = async () => {
       try {
-        const pdf = await pdfjs.getDocument("nodedev.pdf").promise;
+        if (!uploadedFile) {
+          return router.push("upload-file");
+        }
+        const pdf = await pdfjs.getDocument(await uploadedFile.arrayBuffer())
+          .promise;
         setTotalPages(pdf.numPages);
         const page = await pdf.getPage(currentPage);
         const scale = 1;
@@ -68,8 +80,8 @@ const ConfirmChanges = () => {
             console.log("current selection --->", currentSelections);
             currentSelections.map((e, i) => {
               if (e.selectedOption) {
-                context.fillStyle = "blue";
-                context.font = `${e.font_size + "px" || "16px"} ${
+                context.fillStyle = e.font_color ? e.font_color : "#000000";
+                context.font = `${e.font_size + "px" || "20px"} ${
                   e.font || "Roboto"
                 }`;
                 context.textAlign = "left";
@@ -92,6 +104,22 @@ const ConfirmChanges = () => {
     loadPdf();
   }, [currentPage]);
 
+  const handleDownload = async () => {
+    if (uploadedFile) {
+      const pdf = await uploadedFile.arrayBuffer();
+      columns.map(async (column, colIndex) => {
+        const finalPdf = await modifyPdf(pdf, selections, column);
+        const blob = new Blob([finalPdf], { type: "application/pdf" });
+        const a = document.createElement("a");
+        a.href = URL.createObjectURL(blob);
+        a.download = `${column[downloadOption || 0]}.pdf`;
+        a.style.display = "none";
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+      });
+    }
+  };
   return (
     <>
       <div className={styles.navs}>
@@ -116,24 +144,24 @@ const ConfirmChanges = () => {
               })}
             </select>
             {downloadOption !== null && downloadOption !== "N/A" && (
-              <button className={styles.download_button}>Download</button>
+              <button
+                className={styles.download_button}
+                onClick={handleDownload}
+              >
+                Download
+              </button>
             )}
           </>
         ) : (
           <>
-            <button
-              className={styles.start_over_btn}
-              onClick={() => {
-                router.push("upload-file");
-              }}
-            >
+            <Link className={styles.start_over_btn} href="upload-file">
               <FontAwesomeIcon
                 icon={faArrowRotateRight}
                 flip="horizontal"
                 style={{ color: "#2a61c0", marginRight: "5px" }}
               />
               Start Over
-            </button>
+            </Link>
             <button
               className={styles.continue_btn}
               onClick={() => {

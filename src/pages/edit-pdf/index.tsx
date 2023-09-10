@@ -10,7 +10,6 @@ import { toast } from "react-toastify";
 const EditPdf = () => {
   let [fontSize, setFontSize] = useState<number>(12);
   const [isSelecting, setIsSelecting] = useState<boolean>(false);
-
   const { isSelected, selections, setSelections } = useUploadContext();
   const handleIncrease = (): void => {
     setFontSize(fontSize + 1);

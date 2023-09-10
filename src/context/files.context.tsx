@@ -3,7 +3,7 @@ import React, { createContext, useContext, useState, ReactNode } from "react";
 interface UploadContextProps {
   children: ReactNode;
 }
-type CanvasSelection = {
+export type CanvasSelection = {
   readonly location: { x: number; y: number; xe: number; ye: number };
   readonly pageNumber: number;
   readonly selectedOption?: string | null;
@@ -12,7 +12,7 @@ type CanvasSelection = {
   readonly font_color: string | null;
 };
 
-type ColumnsData = {
+export type ColumnsData = {
   [key: string]: string;
 };
 
@@ -29,6 +29,8 @@ interface UploadContextValue {
   setColumns: (data: ColumnsData[]) => void;
   downloadOption: string | null;
   setDownloadOption: (option: string) => void;
+  pdfWidth: number | null;
+  setPdfWidth: (width: number) => void;
 }
 
 const UploadContext = createContext<UploadContextValue | undefined>(undefined);
@@ -40,6 +42,8 @@ export const UploadProvider: React.FC<UploadContextProps> = ({ children }) => {
   const [isSelected, setIsSelected] = useState<boolean>(false);
   const [columns, setColumns] = useState<ColumnsData[]>([]);
   const [downloadOption, setDownloadOption] = useState<string | null>(null);
+  const [pdfWidth, setPdfWidth] = useState<number | null>(null);
+
   return (
     <UploadContext.Provider
       value={{
@@ -55,6 +59,8 @@ export const UploadProvider: React.FC<UploadContextProps> = ({ children }) => {
         setColumns,
         downloadOption,
         setDownloadOption,
+        pdfWidth,
+        setPdfWidth,
       }}
     >
       {children}
