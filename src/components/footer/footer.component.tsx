@@ -20,16 +20,30 @@ const Footer = () => {
           <div className={styles.footer_main_sec}>
             <h2>GET THE FREE APP</h2>
             <div className={styles.footer_main_img}>
-              <Image
-                src={appStoreLogo}
-                style={{ height: "100%" }}
-                alt="lux ecards app store download link"
-              />
-              <Image
-                src={playStoreLogo}
-                style={{ height: "100%" }}
-                alt="lux ecards play store download link"
-              />
+              <Link
+                href={
+                  "https://play.google.com/store/apps/details?id=com.luxecard.app"
+                }
+                target="_blank"
+              >
+                <Image
+                  src={appStoreLogo}
+                  style={{ height: "100%" }}
+                  alt="lux ecards app store download link"
+                />
+              </Link>
+              <Link
+                href={
+                  "https://play.google.com/store/apps/details?id=com.luxecard.app"
+                }
+                target="_blank"
+              >
+                <Image
+                  src={playStoreLogo}
+                  style={{ height: "100%" }}
+                  alt="lux ecards play store download link"
+                />
+              </Link>
             </div>
           </div>
         </div>

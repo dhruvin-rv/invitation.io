@@ -1,3 +1,4 @@
+import "regenerator-runtime/runtime.js";
 import RootLayout from "@/components/layout/Layout.component";
 import { UploadProvider } from "@/context/files.context";
 import "@/styles/globals.css";

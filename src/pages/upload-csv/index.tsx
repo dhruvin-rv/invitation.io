@@ -51,6 +51,7 @@ const UploadCsv = () => {
         onUpload={onUpload}
         buttonText="browse for a CSV on your computer"
         onContinue={redirect}
+        uploadType="text/csv"
       >
         <h2>Drag and Drop CSV Here to Get Started!</h2>
         <p>

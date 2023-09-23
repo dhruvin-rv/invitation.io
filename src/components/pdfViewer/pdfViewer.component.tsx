@@ -258,8 +258,6 @@ const PDFProvider = ({ selectMode }: PDFProviderProps) => {
     index: number
   ) => {
     const newValue = event.target.value;
-    console.log("new value -->", newValue);
-    console.log("index --->", index);
     setSelectedValues((prevSelectedValues) => {
       const updatedValues = [...prevSelectedValues];
       updatedValues[index] = newValue;

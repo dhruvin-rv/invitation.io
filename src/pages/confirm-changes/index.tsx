@@ -72,12 +72,9 @@ const ConfirmChanges = () => {
           renderingTaskRef.current = page.render(renderContext);
           try {
             await renderingTaskRef.current.promise;
-            console.log("selections -->", selections);
-            console.log("columns -->", columns);
             const currentSelections = selections.filter((e) => {
               return e.pageNumber == currentPage;
             });
-            console.log("current selection --->", currentSelections);
             currentSelections.map((e, i) => {
               if (e.selectedOption) {
                 context.fillStyle = e.font_color ? e.font_color : "#000000";

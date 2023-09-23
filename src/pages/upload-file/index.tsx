@@ -9,6 +9,7 @@ const UploadFile = () => {
   const onUpload = (files: FileList) => {
     setUploadedFile(files[0]);
   };
+
   const redirect = () => {
     router.push("/upload-csv");
   };
@@ -18,6 +19,7 @@ const UploadFile = () => {
         onUpload={onUpload}
         buttonText="Select PDF file from your device to continue"
         onContinue={redirect}
+        uploadType="application/pdf"
       >
         <h2>Drag and Drop PDF Here to Get Started!</h2>
         <p>

@@ -51,10 +51,14 @@ const EditPdf = () => {
     setIsSelecting(!isSelecting);
   };
   const handleFontChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const font = FONTS.find((fontEl) => {
+      return fontEl.name === event.target.value;
+    });
     setSelections((prev) => {
       const updatedSelection = {
         ...prev[prev.length - 1],
-        font: event.target.value,
+        font: font?.font_name ? font.font_name : "Roboto",
+        font_name: event.target.value,
       };
       const final = [...prev];
       final[prev.length - 1] = updatedSelection;
@@ -103,8 +107,7 @@ const EditPdf = () => {
             onChange={handleFontChange}
             className={styles.fontSelection}
             value={
-              (selections.length && selections[selections.length - 1].font) ||
-              ""
+              selections.length && selections[selections.length - 1].font_name||""
             }
           >
             <option value="N/A">Select Font</option>

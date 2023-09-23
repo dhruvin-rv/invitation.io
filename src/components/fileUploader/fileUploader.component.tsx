@@ -1,16 +1,19 @@
 import React, { useState, ReactNode } from "react";
 import styles from "./fileUploader.module.css";
+import { toast } from "react-toastify";
 
 interface FilesDragAndDropProps {
   onUpload: (file: any) => void;
   onContinue: () => void;
   children: ReactNode;
+  uploadType: string;
 }
 const FileUpload: React.FC<FilesDragAndDropProps & { buttonText: string }> = ({
   onUpload,
   onContinue,
   children,
   buttonText,
+  uploadType,
 }) => {
   const [dragging, setDragging] = React.useState<boolean>(false);
   const [fileSelected, setFileSelected] = React.useState<string>("");
@@ -42,8 +45,12 @@ const FileUpload: React.FC<FilesDragAndDropProps & { buttonText: string }> = ({
     setDragging(false);
     const { files } = e.dataTransfer;
     if (files && files.length) {
-      setFileSelected(files[0].name);
-      onUpload(files);
+      if (files[0].type !== uploadType) {
+        return toast.error("Upload the correct file");
+      } else {
+        setFileSelected(files[0].name);
+        onUpload(files);
+      }
     }
   };
 
@@ -70,8 +77,12 @@ const FileUpload: React.FC<FilesDragAndDropProps & { buttonText: string }> = ({
   const handleButtonUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { files } = e.target;
     if (files && files.length) {
-      setFileSelected(files[0].name);
-      onUpload(files);
+      if (files[0].type !== uploadType) {
+        return toast.error(`Uploaded file is not ${uploadType.split("/")[1]}`);
+      } else {
+        setFileSelected(files[0].name);
+        onUpload(files);
+      }
     }
   };
 

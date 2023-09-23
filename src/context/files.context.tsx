@@ -10,6 +10,7 @@ export type CanvasSelection = {
   readonly font: string | null;
   readonly font_size: number | null;
   readonly font_color: string | null;
+  readonly font_name: string | null;
 };
 
 export type ColumnsData = {
