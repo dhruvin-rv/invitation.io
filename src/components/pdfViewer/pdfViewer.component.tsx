@@ -245,6 +245,7 @@ const PDFProvider = ({ selectMode }: PDFProviderProps) => {
         font: null,
         font_size: null,
         font_color: "#000000",
+        font_name: null,
       },
     ]);
 
