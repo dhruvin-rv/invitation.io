@@ -59,8 +59,8 @@ const Hero = () => {
                 alt="hero button background image"
                 src={heroDots}
                 style={{
-                  width: "80%",
-                  height: "80%",
+                  width: "60%",
+                  height: "60%",
                 }}
               />
               <p>
@@ -77,6 +77,7 @@ const Hero = () => {
             style={{
               height: "100%",
               width: "100%",
+              maxWidth: "500px",
             }}
             alt="hero section floral invitation card image"
           />

@@ -24,15 +24,17 @@ const HIW = () => {
         <div className={styles.hiw_step}>
           <h2>Upload The Card</h2>
           <p>
-            Lorem Ipsum is simply dummy text of the printing and typesetting
-            industry.
+            Upload card from the upload card page. You can drag and drop the PDF
+            file or click on the upload button to upload the file.
           </p>
         </div>
         <div className={styles.hiw_step}>
-          <h2>Upload the google sheet</h2>
+          <h2>Upload the CSV File</h2>
           <p>
-            Lorem Ipsum is simply dummy text of the printing and typesetting
-            industry.
+            To acquire a PDF file containing custom names on cards, please
+            upload a CSV file. This CSV should include columns for generating
+            personalized PDFs and specifying the custom names for the downloaded
+            files.
           </p>
         </div>
         <div className={styles.hiw_step}>
@@ -44,8 +46,9 @@ const HIW = () => {
         <div className={styles.hiw_step}>
           <h2>Select area on the card from the PDF viewer to write text on</h2>
           <p>
-            Lorem Ipsum is simply dummy text of the printing and typesetting
-            industry. Lorem Ipsum has
+            You will need to select the area on the card where you want to write
+            the text of the rows of particular columns of the CSV file. You can
+            select multiple areas on the card to write the text on.
           </p>
         </div>
         <div className={styles.hiw_step}>
