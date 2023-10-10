@@ -1,11 +1,16 @@
 import React from "react";
 import styles from "./header.module.css";
 import Link from "next/link";
+import { useState } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faBars } from "@fortawesome/free-solid-svg-icons";
 export const Header = () => {
+  const [isMobile, setIsMobile] = useState(false);
   return (
     <header className={`${styles.main_header} container_main`}>
-      <nav className={styles.left_menu}>
-        <ul>
+      <FontAwesomeIcon icon={faBars} className={styles.menu_icon} />
+      <nav className={styles.nav}>
+        <ul className={styles.left_menu}>
           <li>
             <Link href="/">Home</Link>
           </li>
@@ -17,20 +22,6 @@ export const Header = () => {
           </li>
           <li>
             <Link href="#">Contact US</Link>
-          </li>
-        </ul>
-      </nav>
-      <nav className={styles.right_menu}>
-        <ul>
-          <li>
-            <button className={styles.signup_button}>
-              <Link href="#">SignUp</Link>
-            </button>
-          </li>
-          <li>
-            <button className={styles.signin_button}>
-              <Link href="#">SignIn</Link>
-            </button>
           </li>
         </ul>
       </nav>

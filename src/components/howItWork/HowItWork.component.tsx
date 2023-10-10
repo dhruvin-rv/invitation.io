@@ -21,14 +21,14 @@ const HIW = () => {
         <div className={styles.hiw_step}>
           <Image src={uploadCardSvg} alt="" style={{ width: "90%" }} />
         </div>
-        <div className={styles.hiw_step}>
+        <div className={`${styles.hiw_step} ${styles.hiw_item}`}>
           <h2>Upload The Card</h2>
           <p>
             Upload card from the upload card page. You can drag and drop the PDF
             file or click on the upload button to upload the file.
           </p>
         </div>
-        <div className={styles.hiw_step}>
+        <div className={`${styles.hiw_step} ${styles.hiw_item}`}>
           <h2>Upload the CSV File</h2>
           <p>
             To acquire a PDF file containing custom names on cards, please
@@ -37,13 +37,13 @@ const HIW = () => {
             files.
           </p>
         </div>
-        <div className={styles.hiw_step}>
+        <div className={`${styles.hiw_step} ${styles.hiw_item}`}>
           <Image src={uploadSheetSvg} alt="" style={{ width: "90%" }} />
         </div>
-        <div className={styles.hiw_step}>
+        <div className={`${styles.hiw_step} ${styles.hiw_item}`}>
           <Image src={selectAreaSvg} alt="" style={{ width: "90%" }} />
         </div>
-        <div className={styles.hiw_step}>
+        <div className={`${styles.hiw_step} ${styles.hiw_item}`}>
           <h2>Select area on the card from the PDF viewer to write text on</h2>
           <p>
             You will need to select the area on the card where you want to write
@@ -51,7 +51,7 @@ const HIW = () => {
             select multiple areas on the card to write the text on.
           </p>
         </div>
-        <div className={styles.hiw_step}>
+        <div className={`${styles.hiw_step} ${styles.hiw_item}`}>
           <h2>Download PDFs file </h2>
           <p>
             Lorem Ipsum is simply dummy text of the printing and typesetting
@@ -60,7 +60,7 @@ const HIW = () => {
             type and scrambled it to make a type specimen book.
           </p>
         </div>
-        <div className={styles.hiw_step}>
+        <div className={`${styles.hiw_step} ${styles.hiw_item}`}>
           <Image src={downloadPdfSvg} alt="" style={{ width: "90%" }} />
         </div>
       </div>

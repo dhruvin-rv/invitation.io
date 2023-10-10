@@ -22,6 +22,36 @@
     align-items: center;
 }
 
+@media (max-width: 768px) {
+    .hiw_guide {
+        grid-template-columns: 1fr;
+    }
+
+    .hiw_item:nth-child(1) {
+        order: 1;
+    }
+
+    .hiw_item:nth-child(2) {
+        order: 2;
+    }
+
+    .hiw_item:nth-child(3) {
+        order: 4;
+    }
+
+    .hiw_item:nth-child(4) {
+        order: 3;
+    }
+
+    .hiw_item:nth-child(5) {
+        order: 5;
+    }
+
+    .hiw_item:nth-child(6) {
+        order: 6;
+    }
+}
+
 
 .hiw_step {
     padding: 0 150px;
