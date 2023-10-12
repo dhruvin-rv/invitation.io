@@ -3,28 +3,47 @@ import styles from "./header.module.css";
 import Link from "next/link";
 import { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBars } from "@fortawesome/free-solid-svg-icons";
+import { faHamburger } from "@fortawesome/free-solid-svg-icons";
+
 export const Header = () => {
-  const [isMobile, setIsMobile] = useState(false);
+  const [showNav, setShowNav] = useState(false)
+  const [showNavbar, setShowNavbar] = useState(false)
+
+  const toggleNavItems = () => {
+    setShowNav(!showNav)
+  }
+  const handleShowNavbar = () => {
+    setShowNavbar(!showNavbar)
+  }
   return (
-    <header className={`${styles.main_header} container_main`}>
-      <FontAwesomeIcon icon={faBars} className={styles.menu_icon} />
-      <nav className={styles.nav}>
-        <ul className={styles.left_menu}>
+    <nav className={styles.navbar}>
+    <div className={styles.container}>
+      <div className={styles.logo}>
+       BIG LOGO
+      </div>
+      <div className={styles["menu-icon"]} onClick={handleShowNavbar}>
+        <FontAwesomeIcon icon={faHamburger} />
+      </div>
+      <div className={`${styles["nav-elements"]}  ${showNavbar && styles.active}}`}>
+        <ul>
           <li>
             <Link href="/">Home</Link>
           </li>
           <li>
-            <Link href="/upload-file">Upload Card</Link>
+            <Link href="/blog">Blog</Link>
           </li>
           <li>
-            <Link href="/about-us">About</Link>
+            <Link href="/projects">Projects</Link>
           </li>
           <li>
-            <Link href="#">Contact US</Link>
+            <Link href="/about">About</Link>
+          </li>
+          <li>
+            <Link href="/contact">Contact</Link>
           </li>
         </ul>
-      </nav>
-    </header>
+      </div>
+    </div>
+  </nav>
   );
 };
