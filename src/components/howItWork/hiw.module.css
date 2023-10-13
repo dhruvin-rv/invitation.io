@@ -1,7 +1,21 @@
 .hiw_main {
     width: 30%;
     min-width: 450px;
-    margin: -50px auto 50px;
+    margin: 0 auto
+}
+
+.hiw-chip{
+    background-color: #486BBC;
+    border-radius: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 150px;
+    height: 50px;
+}
+.hiw-chip h1{
+    font-size: 100%;
+    color: #fff;
 }
 
 .hiw_main h1 {
@@ -20,6 +34,24 @@
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     align-items: center;
+    margin-top: 50px;
+}
+
+
+.hiw_step {
+    padding: 0 20%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.hiw_step h2{
+    text-align: center;
+}
+
+.hiw_step p {
+    color: #9E9E9E;
 }
 
 @media (max-width: 768px) {
@@ -50,13 +82,8 @@
     .hiw_item:nth-child(6) {
         order: 6;
     }
+    .hiw_step {
+        padding: 0 10%;
+    }
 }
 
-
-.hiw_step {
-    padding: 0 150px;
-}
-
-.hiw_step p {
-    color: #9E9E9E;
-}
