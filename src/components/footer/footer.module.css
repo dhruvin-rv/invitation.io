@@ -7,6 +7,9 @@
     justify-content: space-around;
     align-items: center;
     padding: 20px 0;
+    flex-wrap: wrap;
+    gap: 100px;
+    margin-top: 50px;
 }
 
 .footer_main_first {
@@ -25,8 +28,8 @@
 .footer_sec {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    margin: 0 100px;
+    justify-content: center;
+    margin: 0 10px;
 }
 
 .footer_sec p {

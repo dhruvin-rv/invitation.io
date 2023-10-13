@@ -16,7 +16,8 @@
   position: relative;
 }
 
-.logo {
+.logo img {
+  width: 50%;
 }
 
 .menu-icon {

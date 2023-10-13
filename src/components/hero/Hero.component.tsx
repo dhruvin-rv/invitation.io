@@ -9,7 +9,7 @@ const Hero = () => {
   return (
     <>
       <div className={styles.hero_main}>
-        <div className={`${styles.hero_first} `}>
+        <div className={`${styles.hero_first}`}>
           <h2>Invitation AI</h2>
           <p>PDF Editor</p>
           <h1>Create a Pdf file of the cards with name of your guest.</h1>
@@ -71,13 +71,12 @@ const Hero = () => {
             </div>
           </div>
         </div>
-        <div>
+        <div >
           <Image
             src={HeroFloral}
             style={{
               height: "100%",
               width: "100%",
-              maxWidth: "500px",
             }}
             alt="hero section floral invitation card image"
           />

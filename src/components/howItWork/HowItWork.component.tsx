@@ -8,7 +8,7 @@ import downloadPdfSvg from "../../../public/images/download_file_svg.svg";
 import { Chip, Divider } from "@mui/material";
 const HIW = () => {
   return (
-    <>
+    <div className="container_main">
       <Divider style={{margin:"100px 0px 0px"}}>
         <div className={styles["hiw-chip"]}>
         <h1>How It Works?</h1>
@@ -20,7 +20,7 @@ const HIW = () => {
           eco-friendly,high-quality paper stock.
         </p>
       </div>
-      <div className={`${styles.hiw_guide} container_main`}>
+      <div className={`${styles.hiw_guide}`}>
         <div className={styles.hiw_step}>
           <Image src={uploadCardSvg} alt="" style={{ width: "90%" }} />
         </div>
@@ -66,7 +66,7 @@ const HIW = () => {
           <Image src={downloadPdfSvg} alt="" style={{ width: "90%" }} />
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

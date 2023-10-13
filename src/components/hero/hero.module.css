@@ -4,14 +4,16 @@
     justify-content: center;
     flex-wrap: wrap;
     margin-top: 30px;
+    gap:100px
 }
 
 .hero_first {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    padding: 50px;
+    padding: 5%;
     width: 30%;
+    max-width: 400px;
     min-width: 300px;
     border-radius: 36px;
     border: 1px solid #DFE7F9;
@@ -61,4 +63,10 @@
 
 .hero_main button span:hover {
     color: #DFE7F9;
+}
+
+@media screen and (max-width: 100px) {
+  .hero_main{
+    gap:10px
+  }
 }

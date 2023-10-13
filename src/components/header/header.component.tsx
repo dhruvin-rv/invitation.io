@@ -3,8 +3,9 @@ import styles from "./header.module.css";
 import Link from "next/link";
 import { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faHamburger } from "@fortawesome/free-solid-svg-icons";
-
+import { faBars,faXmark } from "@fortawesome/free-solid-svg-icons";
+import logo from "../../../public/images/INVITATION AI.svg";
+import Image from "next/image";
 export const Header = () => {
   const [showNav, setShowNav] = useState(false)
   const [showNavbar, setShowNavbar] = useState(false)
@@ -24,10 +25,12 @@ export const Header = () => {
     <nav className={styles.navbar}>
     <div className={styles.container}>
       <div className={styles.logo}>
-       INVITATION AI
+        <Link href="/"> 
+       <Image src={logo} alt="logo"/>
+        </Link>
       </div>
       <div className={styles["menu-icon"]} onClick={handleShowNavbar}>
-        <FontAwesomeIcon icon={faHamburger} />
+        <FontAwesomeIcon icon={showNavbar ? faXmark:faBars  } />
       </div>
       <div className={`${styles["nav-elements"]}  ${showNavbar && styles.active}`}>
         <ul>
