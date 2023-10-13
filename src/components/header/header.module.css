@@ -12,7 +12,7 @@
 
 .navbar {
   height: 60px;
-  background-color: #fef7e5;
+  background-color: #ffffff;
   position: relative;
 }
 
@@ -75,15 +75,16 @@
     position: absolute;
     right: 0;
     top: 60px;
-    background-color: #fef7e5;
+    background-color: #b4b3ff;
     width: 0px;
     height: calc(100vh - 60px);
     transition: all 0.3s ease-in;
     overflow: hidden;
+    z-index: 1;
   }
 
   .nav-elements.active {
-    width: 270px;
+    width: 100%;
   }
 
   .nav-elements ul {
@@ -95,4 +96,11 @@
     margin-right: unset;
     margin-top: 22px;
   }
+
+  .nav-elements ul li a{
+    font-size: 30px;
+    text-transform: uppercase;
+    color: #fff
+  }
+
 }

@@ -1,7 +1,9 @@
 body {
   margin: 0;
 }
-
+body.navbar-open {
+  overflow: hidden;
+}
 a,
 p {
   font-family: Inter;

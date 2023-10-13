@@ -14,32 +14,34 @@ export const Header = () => {
   }
   const handleShowNavbar = () => {
     setShowNavbar(!showNavbar)
+    if (!showNavbar) {
+      document.body.classList.add('navbar-open');
+    } else {
+      document.body.classList.remove('navbar-open');
+    }
   }
   return (
     <nav className={styles.navbar}>
     <div className={styles.container}>
       <div className={styles.logo}>
-       BIG LOGO
+       INVITATION AI
       </div>
       <div className={styles["menu-icon"]} onClick={handleShowNavbar}>
         <FontAwesomeIcon icon={faHamburger} />
       </div>
-      <div className={`${styles["nav-elements"]}  ${showNavbar && styles.active}}`}>
+      <div className={`${styles["nav-elements"]}  ${showNavbar && styles.active}`}>
         <ul>
           <li>
             <Link href="/">Home</Link>
           </li>
           <li>
-            <Link href="/blog">Blog</Link>
+            <Link href="/about-us">About Us</Link>
           </li>
           <li>
-            <Link href="/projects">Projects</Link>
+            <Link href="/upload-file">Upload PDF</Link>
           </li>
           <li>
-            <Link href="/about">About</Link>
-          </li>
-          <li>
-            <Link href="/contact">Contact</Link>
+            <Link href="/Contact Us">Contact Us</Link>
           </li>
         </ul>
       </div>
