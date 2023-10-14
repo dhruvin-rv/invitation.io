@@ -2,11 +2,13 @@ import React, { useState, ReactNode } from "react";
 import styles from "./fileUploader.module.css";
 import { toast } from "react-toastify";
 
+
 interface FilesDragAndDropProps {
   onUpload: (file: any) => void;
   onContinue: () => void;
   children: ReactNode;
   uploadType: string;
+  accept:string
 }
 const FileUpload: React.FC<FilesDragAndDropProps & { buttonText: string }> = ({
   onUpload,
@@ -14,6 +16,7 @@ const FileUpload: React.FC<FilesDragAndDropProps & { buttonText: string }> = ({
   children,
   buttonText,
   uploadType,
+  accept
 }) => {
   const [dragging, setDragging] = React.useState<boolean>(false);
   const [fileSelected, setFileSelected] = React.useState<string>("");
@@ -99,6 +102,7 @@ const FileUpload: React.FC<FilesDragAndDropProps & { buttonText: string }> = ({
           type="file"
           style={{ display: "none" }}
           ref={fileInputRef}
+          accept={accept}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
             handleButtonUpload(e)
           }

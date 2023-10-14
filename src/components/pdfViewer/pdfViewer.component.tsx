@@ -88,8 +88,11 @@ const PDFProvider = ({ selectMode }: PDFProviderProps) => {
         const pdf = await pdfjs.getDocument(await uploadedFile?.arrayBuffer())
           .promise;
         setTotalPages(pdf.numPages);
+        const screenSize = window.screen.width<800?window.screen.width:800;
+        const screenPercent = (screenSize*100)/620
+        const scaleBy = (screenPercent*1)/100
         const page = await pdf.getPage(currentPage);
-        const scale = 1;
+        const scale = scaleBy;
         const viewport = page.getViewport({ scale });
         const canvas = canvasRef.current;
         if (canvas) {
@@ -149,7 +152,7 @@ const PDFProvider = ({ selectMode }: PDFProviderProps) => {
     return () => {
       clearTimeout(timeoutId);
     };
-  }, [currentPage]);
+  }, [currentPage,]);
 
   useEffect(() => {
     const drawCanvas = canvasToDraw.current;

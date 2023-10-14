@@ -31,5 +31,11 @@
 
 .about_us_content p{
     text-align: center;
-    padding: 0 150px;
+    padding: 0 30%;
+}
+
+@media screen and (max-width: 768px) {
+    .about_us_content p{
+        padding: 0 10%;
+    }
 }

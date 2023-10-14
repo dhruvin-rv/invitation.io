@@ -44,7 +44,7 @@ export const Header = () => {
             <Link href="/upload-file">Upload PDF</Link>
           </li>
           <li>
-            <Link href="/Contact Us">Contact Us</Link>
+            <Link href="/contact-us">Contact Us</Link>
           </li>
         </ul>
       </div>
