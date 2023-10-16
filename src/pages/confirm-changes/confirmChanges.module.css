@@ -123,3 +123,9 @@
     border: 1px solid black;
     cursor: pointer
 }
+
+@media screen and (max-width: 768px) {
+    .navs {
+        padding: 0 10%;
+    }    
+}

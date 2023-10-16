@@ -12,11 +12,13 @@ function hexToRgb(
 export const modifyPdf = async (
   pdf: ArrayBuffer,
   selections: CanvasSelection[],
-  column: { [key: string]: string }
+  column: { [key: string]: string },
+  scaledWidth:number
 ): Promise<Uint8Array> => {
   const pdfDoc = await PDFDocument.load(pdf);
   pdfDoc.registerFontkit(fontKit);
-  const { height } = pdfDoc.getPage(1).getSize();
+  const { height,width } = pdfDoc.getPage(0).getSize();
+  const scaleBy = scaledWidth*100-100
   for (let i = 0; i < selections.length; i++) {
     const selection = selections[i];
     const fontBytes = await fetch(`/fonts/${selection.font}.ttf`);
@@ -29,8 +31,8 @@ export const modifyPdf = async (
     );
     currentPage.drawText(column[`${selection?.selectedOption}`], {
       font: customFont,
-      x: selection.location.x,
-      y: height - (selection.location.y + selection.location.ye),
+      x: selection.location.x-(selection.location.x*scaleBy/100),
+      y: height - ((selection.location.y + selection.location.ye)-((selection.location.y + selection.location.ye)*scaleBy/100)),
       size: selection.font_size ? selection.font_size : 20,
       color: rgb(color[0] / 255 || 0, color[1] / 255 || 0, color[2] / 255 || 0),
     });

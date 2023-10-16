@@ -32,6 +32,8 @@ interface UploadContextValue {
   setDownloadOption: (option: string) => void;
   pdfWidth: number | null;
   setPdfWidth: (width: number) => void;
+  scaledWidth: number;
+  setScaledWidth: (percentage: number) => void;
 }
 
 const UploadContext = createContext<UploadContextValue | undefined>(undefined);
@@ -39,11 +41,13 @@ const UploadContext = createContext<UploadContextValue | undefined>(undefined);
 export const UploadProvider: React.FC<UploadContextProps> = ({ children }) => {
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
   const [csvFile, setCsvFile] = useState<File | null>(null);
+  const [scaledWidth,setScaledWidth] = useState<number>(0);
   const [selections, setSelections] = useState<CanvasSelection[]>([]);
   const [isSelected, setIsSelected] = useState<boolean>(false);
   const [columns, setColumns] = useState<ColumnsData[]>([]);
   const [downloadOption, setDownloadOption] = useState<string | null>(null);
   const [pdfWidth, setPdfWidth] = useState<number | null>(null);
+
 
   return (
     <UploadContext.Provider
@@ -62,6 +66,8 @@ export const UploadProvider: React.FC<UploadContextProps> = ({ children }) => {
         setDownloadOption,
         pdfWidth,
         setPdfWidth,
+        scaledWidth,
+        setScaledWidth
       }}
     >
       {children}

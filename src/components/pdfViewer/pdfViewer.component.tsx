@@ -34,7 +34,7 @@ const PDFProvider = ({ selectMode }: PDFProviderProps) => {
     csvFile,
     setIsSelected,
     isSelected,
-    uploadedFile,
+    uploadedFile
   } = useUploadContext();
   const [selectedValues, setSelectedValues] = React.useState<Array<string>>([]);
   const [columns, setColumns] = React.useState<Array<string>>([]);
@@ -75,7 +75,7 @@ const PDFProvider = ({ selectMode }: PDFProviderProps) => {
       };
       reader.readAsText(csvFile);
     } else {
-      router.push("/upload-csv");
+      router.push("/upload-file");
     }
   }, []);
 

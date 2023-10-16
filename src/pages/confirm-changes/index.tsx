@@ -28,6 +28,8 @@ const ConfirmChanges = () => {
     downloadOption,
     uploadedFile,
     pdfWidth,
+    setScaledWidth,
+    scaledWidth
   } = useUploadContext();
   const router = useRouter();
   const handlePrevious = (): void => {
@@ -54,12 +56,16 @@ const ConfirmChanges = () => {
         const pdf = await pdfjs.getDocument(await uploadedFile.arrayBuffer())
           .promise;
         setTotalPages(pdf.numPages);
+        const screenSize = window.screen.width<800?window.screen.width:800;
+        const screenPercent = (screenSize*100)/620
+        const scaleBy = (screenPercent*1)/100
         const page = await pdf.getPage(currentPage);
-        const scale = 1;
+        const scale = scaleBy
         const viewport = page.getViewport({ scale });
         const canvas = canvasRef.current;
         if (canvas) {
           const context = canvas.getContext("2d")!;
+          setScaledWidth(scaleBy)
           canvas.height = viewport.height;
           canvas.width = viewport.width;
           if (renderingTaskRef.current) {
@@ -104,8 +110,9 @@ const ConfirmChanges = () => {
   const handleDownload = async () => {
     if (uploadedFile) {
       const pdf = await uploadedFile.arrayBuffer();
+      
       columns.map(async (column, colIndex) => {
-        const finalPdf = await modifyPdf(pdf, selections, column);
+        const finalPdf = await modifyPdf(pdf, selections, column,scaledWidth);
         const blob = new Blob([finalPdf], { type: "application/pdf" });
         const a = document.createElement("a");
         a.href = URL.createObjectURL(blob);

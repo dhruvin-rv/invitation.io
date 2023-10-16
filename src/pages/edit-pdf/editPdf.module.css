@@ -2,11 +2,13 @@
     display: flex;
     align-items: center;
     justify-content: space-evenly;
-    max-height: 50px;
+height: auto;
     background-color: #FFFFFF;
     min-height: 50px;
     margin: 0 20%;
     border: 2px;
+    flex-wrap: wrap;
+
 }
 
 .fontSizeProvider {
