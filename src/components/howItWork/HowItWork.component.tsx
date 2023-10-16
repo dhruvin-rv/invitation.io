@@ -22,7 +22,7 @@ const HIW = () => {
       </div>
       <div className={`${styles.hiw_guide}`}>
         <div className={styles.hiw_step}>
-          <Image src={uploadCardSvg} alt="" style={{ width: "90%" }} />
+          <Image src={uploadCardSvg} alt="uploadCardSvg" style={{ width: "90%" }} />
         </div>
         <div className={`${styles.hiw_step} ${styles.hiw_item}`}>
           <h2>Upload The Card</h2>
@@ -41,10 +41,10 @@ const HIW = () => {
           </p>
         </div>
         <div className={`${styles.hiw_step} ${styles.hiw_item}`}>
-          <Image src={uploadSheetSvg} alt="" style={{ width: "90%" }} />
+          <Image src={uploadSheetSvg} alt="uploadSheetSvg" style={{ width: "90%" }} />
         </div>
         <div className={`${styles.hiw_step} ${styles.hiw_item}`}>
-          <Image src={selectAreaSvg} alt="" style={{ width: "90%" }} />
+          <Image src={selectAreaSvg} alt="selectAreaSvg" style={{ width: "90%" }} />
         </div>
         <div className={`${styles.hiw_step} ${styles.hiw_item}`}>
           <h2>Select area on the card from the PDF viewer to write text on</h2>
@@ -63,7 +63,7 @@ const HIW = () => {
           </p>
         </div>
         <div className={`${styles.hiw_step} ${styles.hiw_item}`}>
-          <Image src={downloadPdfSvg} alt="" style={{ width: "90%" }} />
+          <Image src={downloadPdfSvg} alt="downloadPdfSvg" style={{ width: "90%" }} />
         </div>
       </div>
     </div>

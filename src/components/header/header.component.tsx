@@ -25,7 +25,7 @@ export const Header = () => {
     <nav className={styles.navbar}>
     <div className={styles.container}>
       <div className={styles.logo}>
-        <Link href="/"> 
+        <Link  href="/"> 
        <Image src={logo} alt="logo"/>
         </Link>
       </div>
@@ -35,16 +35,16 @@ export const Header = () => {
       <div className={`${styles["nav-elements"]}  ${showNavbar && styles.active}`}>
         <ul>
           <li>
-            <Link href="/">Home</Link>
+            <Link   href="/">Home</Link>
           </li>
           <li>
-            <Link href="/about-us">About Us</Link>
+            <Link   href="/about-us">About Us</Link>
           </li>
           <li>
-            <Link href="/upload-file">Upload PDF</Link>
+            <Link   href="/upload-file">Upload PDF</Link>
           </li>
           <li>
-            <Link href="/contact-us">Contact Us</Link>
+            <Link  href="/contact-us">Contact Us</Link>
           </li>
         </ul>
       </div>
