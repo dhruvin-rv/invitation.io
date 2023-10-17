@@ -5,14 +5,12 @@ export default function Document() {
   return (
     <Html lang="en">
       <Head>
-        <Script async src="https://www.googletagmanager.com/gtag/js?id=G-0MZ6FPYMYK"></Script>
-        <Script id="google-analytics">{`
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-0MZ6FPYMYK');`}
-        </Script>
+      <Script  strategy="lazyOnload" src="https://www.googletagmanager.com/gtag/js?id=G-0MZ6FPYMYK"></Script>
+    <Script strategy="lazyOnload" id="google-analytics" dangerouslySetInnerHTML={{__html:`
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-0MZ6FPYMYK');`}}/>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="icon" href="/favicon.ico" />
         <link

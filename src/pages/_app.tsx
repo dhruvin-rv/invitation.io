@@ -7,14 +7,17 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { config } from '@fortawesome/fontawesome-svg-core'
 import '@fortawesome/fontawesome-svg-core/styles.css'
+import Script from "next/script";
 config.autoAddCss = false
 export default function App({ Component, pageProps }: AppProps) {
   return (
+    <>
     <UploadProvider>
       <RootLayout>
         <Component {...pageProps} />
         <ToastContainer />
       </RootLayout>
     </UploadProvider>
+    </>
   );
 }
