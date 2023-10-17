@@ -1,5 +1,6 @@
 import FileUpload from "@/components/fileUploader/fileUploader.component";
 import { useUploadContext } from "@/context/files.context";
+import Head from "next/head";
 import { useRouter } from "next/router";
 import React from "react";
 
@@ -15,6 +16,14 @@ const UploadFile = () => {
   };
   return (
     <>
+      <Head>
+        <meta charSet='UTF-8' />
+        <meta name="author" content="Invitation.io"></meta>
+        <meta property="og:title" content="Upload PDF - Invitation.io" key="title" />
+        <meta name="description" content="Upload PDF"></meta>
+        <meta name="robots" content="index, no-follow"></meta>
+        <title>Upload PDF - Invitation.io</title>
+      </Head>
       <FileUpload
         onUpload={onUpload}
         buttonText="Select PDF file from your device to continue"

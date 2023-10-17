@@ -1,0 +1,23 @@
+.heading{
+    text-align: center;
+    text-transform: uppercase;
+    color: #486BBC;
+}
+
+.contactDiv{
+    margin: 50px auto;
+    max-width: 500px;
+    min-width: 300px;
+    width: calc(100% - 100px);
+}
+
+.contactDiv p {
+    color: #606060;
+    text-align: center;
+}
+
+.contactForm{
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px;
+}

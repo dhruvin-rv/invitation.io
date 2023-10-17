@@ -4,14 +4,19 @@ body {
 body.navbar-open {
   overflow: hidden;
 }
+
 a,
 p {
-  font-family: Inter;
+  font-family: Montserrat;
   text-decoration: none;
 }
 
-h1,
-h2 {
+button{
+  font-family: Montserrat;
+
+}
+
+h1,h2,h3,h4,h5,h6 {
   margin: 0;
   font-family: Roboto;
 }
@@ -20,3 +25,4 @@ h2 {
   max-width: 80%;
   margin: auto;
 }
+

@@ -50,9 +50,9 @@ const Footer = () => {
         <div className={styles.footer_sec}>
           <p>© 2023 invitation ai, Inc.</p>
           <div>
-            <Link href="#">Privacy Policy</Link>
+            <Link href="/privacy-policy">Privacy Policy</Link>
             <span> | </span>
-            <Link href="#">Terms & Conditions</Link>
+            <Link href="/terms">Terms & Conditions</Link>
           </div>
         </div>
       </footer>

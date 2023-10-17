@@ -1,5 +1,6 @@
 import FileUpload from "@/components/fileUploader/fileUploader.component";
 import { useUploadContext } from "@/context/files.context";
+import Head from "next/head";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 interface ColumnData {
@@ -47,6 +48,14 @@ const UploadCsv = () => {
   };
   return (
     <>
+      <Head>
+        <meta charSet='UTF-8' />
+        <meta name="author" content="Invitation.io"></meta>
+        <meta property="og:title" content="Upload CSV - Invitation.io" key="title" />
+        <meta name="description" content="Upload CSV"></meta>
+        <meta name="robots" content="index, no-follow"></meta>
+        <title>Upload CSV - Invitation.io</title>
+      </Head>
       <FileUpload
         onUpload={onUpload}
         buttonText="browse for a CSV on your computer"
@@ -56,7 +65,7 @@ const UploadCsv = () => {
       >
         <h2>Drag and Drop CSV Here to Get Started!</h2>
         <p>
-          Use the button below to upload your documents to PDF Editor and begin
+          Use the button below to upload your documents to CSV Editor and begin
         </p>
       </FileUpload>
     </>
