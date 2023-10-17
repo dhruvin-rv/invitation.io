@@ -79,6 +79,7 @@ const Hero = () => {
               width: "100%",
             }}
             alt="hero section floral invitation card image"
+            
           />
         </div>
       </div>

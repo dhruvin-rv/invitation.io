@@ -15,6 +15,8 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="robots" content="index, follow"></meta>
         <meta name="author" content="Invitation.io"></meta>
+        <meta name="google-adsense-account" content="ca-pub-7681955138987568" />
+        <link rel="icon" href="/favicon.ico" />
       </Head>
       <Hero />
       <HIW />
