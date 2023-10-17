@@ -1,9 +1,7 @@
 import Head from "next/head";
-import { Inter } from "next/font/google";
 import Hero from "@/components/hero/Hero.component";
 import HIW from "@/components/howItWork/HowItWork.component";
 
-const inter = Inter({ subsets: ["latin"] });
 
 export default function Home() {
   return (
